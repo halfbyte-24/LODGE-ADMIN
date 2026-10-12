@@ -6,14 +6,12 @@ import './LocationPage.css';
 export default function LocationPage() {
   return (
     <div className="bengali-page">
-      {/* Editorial Hero */}
-      <section className="bengali-page-hero editorial-hero">
-        <div className="hero-texture-overlay"></div>
-        <img src="/images/art7.jpg" className="editorial-hero-bg" alt="Alpana Motif" />
-        
-        <div className="section-wrapper text-center relative z-2">
+      {/* Clean Compact Page Header */}
+      <section className="bengali-page-hero">
+        <div className="section-wrapper text-center">
           <span className="page-eyebrow">DIRECTIONS & ACCESS</span>
           <h1 className="page-title">Location & How to Reach</h1>
+          <div className="page-title-line" />
           <p className="page-description">
             Conveniently situated in Midnapore, West Bengal — easily accessible from the railway station, 
             bus terminus, and major highways.

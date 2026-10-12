@@ -2,7 +2,7 @@
   background-color: var(--bg-surface);
   position: relative;
   overflow: hidden;
-  padding: 120px 0;
+  padding: 50px 0 44px;
 }
 
 .about-bg-texture {
@@ -27,103 +27,43 @@
 
 .about-editorial-layout {
   display: grid;
-  grid-template-columns: 1fr 1.2fr 1fr;
-  gap: 60px;
+  grid-template-columns: auto 1.2fr 1fr;
+  gap: 48px;
   align-items: center;
   position: relative;
   z-index: 2;
 }
 
-/* Left Artwork - Multiply Blend */
-.about-left-art {
-  position: relative;
-  height: 500px;
+/* Left Clean Professional Text Column */
+.about-text-column {
+  padding: 10px 0;
 }
 
-.about-art-dancer {
-  position: absolute;
-  top: 10%;
-  left: 0;
-  width: 90%;
-  mix-blend-mode: multiply;
-  -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 70%);
-  mask-image: radial-gradient(ellipse at center, black 40%, transparent 70%);
-}
-
-.about-art-instrument {
-  position: absolute;
-  bottom: 0;
-  right: -10%;
-  width: 70%;
-  mix-blend-mode: multiply;
-  transform: rotate(15deg);
-}
-
-/* Center Content */
-.about-center-content {
-  text-align: center;
-  padding: 40px;
-  background: rgba(253, 24bf, 237, 0.4);
-  border: 1px solid rgba(203, 163, 88, 0.2);
-  border-radius: 2px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-  backdrop-filter: blur(4px);
-}
-
-.section-eyebrow {
-  display: inline-block;
-  font-size: 0.8rem;
-  letter-spacing: 0.2em;
-  color: var(--accent-gold);
-  margin-bottom: 20px;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.section-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2.5rem, 4vw, 3.5rem);
+.about-clean-heading {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2.2rem, 3.8vw, 3.2rem);
   color: var(--text-primary);
-  line-height: 1.1;
-  margin-bottom: 24px;
+  line-height: 1.15;
+  margin: 8px 0 24px;
+  font-weight: 700;
 }
 
-.about-description {
-  font-size: 1.1rem;
+.about-lead-text {
+  font-size: 1.08rem;
+  line-height: 1.75;
+  color: var(--text-primary);
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.about-body-text {
+  font-size: 1rem;
   line-height: 1.8;
   color: var(--text-secondary);
-  margin: 0 auto 30px;
+  margin-bottom: 18px;
 }
 
-.about-cta-link {
-  display: inline-flex;
-  align-items: center;
-  color: var(--text-primary);
-  font-size: 0.9rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  font-weight: 600;
-  text-decoration: none;
-  border-bottom: 1px solid var(--accent-terracotta);
-  padding-bottom: 4px;
-  transition: all 0.3s ease;
-}
-
-.about-cta-link:hover {
-  color: var(--accent-terracotta);
-}
-
-.cta-arrow {
-  margin-left: 8px;
-  color: var(--accent-terracotta);
-  transition: transform 0.3s ease;
-}
-
-.about-cta-link:hover .cta-arrow {
-  transform: translateX(4px);
-}
-
-/* Right Composition: Room Image + Red Info Panel */
+/* Right Composition: Bengali Bride & Groom Illustration + Info Panel */
 .about-right-composition {
   position: relative;
   display: flex;
@@ -138,16 +78,19 @@
   background: white;
   padding: 8px;
   border: 1px solid var(--border-subtle);
-  box-shadow: var(--shadow-md);
-  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(37,32,25,0.08);
+  border-radius: 6px;
   overflow: hidden;
 }
 
+.about-couple-img,
 .about-hotel-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 2px;
+  object-position: center;
+  border-radius: 4px;
+  display: block;
 }
 
 .about-red-info-panel {
@@ -156,12 +99,12 @@
   right: -20px;
   background: linear-gradient(135deg, #B52222 0%, #8F1717 100%);
   color: white;
-  padding: 24px 28px;
-  border-radius: 8px 14px 10px 18px; /* Organic handcrafted brush edge */
+  padding: 22px 26px;
+  border-radius: 8px 14px 10px 18px;
   box-shadow: 0 12px 32px rgba(143, 23, 23, 0.35);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   z-index: 5;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
@@ -188,20 +131,47 @@
   flex-shrink: 0;
 }
 
+/* Left art column: Bengali folk illustrations */
+.about-left-art {
+  position: relative;
+  width: 160px;
+  flex-shrink: 0;
+}
+
+.about-art-dancer {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.about-art-instrument {
+  width: 70%;
+  height: auto;
+  display: block;
+  margin-top: 16px;
+  margin-left: auto;
+  object-fit: contain;
+  opacity: 0.8;
+}
+
+/* Center text column */
+.about-center-content {
+  padding: 8px 0;
+}
+
 @media (max-width: 1024px) {
   .about-editorial-layout {
-    grid-template-columns: 1fr;
-    gap: 60px;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
   }
+  /* Hide the left decorative art column on tablet/mobile */
   .about-left-art {
-    height: 350px;
-    max-width: 450px;
-    margin: 0 auto;
-    width: 100%;
+    display: none;
   }
   .about-right-composition {
-    max-width: 450px;
-    margin: 0 auto;
+    max-width: 100%;
+    margin: 0;
     width: 100%;
   }
   .about-red-info-panel {
@@ -209,3 +179,14 @@
     margin-top: 20px;
   }
 }
+
+@media (max-width: 640px) {
+  .about-editorial-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .about-hotel-image-wrapper {
+    aspect-ratio: 3/2;
+  }
+}
+

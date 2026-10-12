@@ -5,11 +5,9 @@ import './FacilitiesSection.css';
 const HOTEL_FACILITIES = [
   { id: 'rooms', name: 'Comfortable Rooms', description: 'Air-conditioned rooms with plush bedding and traditional warmth.', icon: BedDouble },
   { id: 'wifi', name: 'Free Wi-Fi', description: 'High-speed wireless connectivity throughout the property.', icon: Wifi },
-  { id: 'water', name: '24 Hour Hot Water', description: 'Uninterrupted geyser hot and cold water in all bathrooms.', icon: Droplets },
   { id: 'room-service', name: 'Room Service', description: 'Prompt food and beverage delivery to your doorstep.', icon: Clock },
   { id: 'housekeeping', name: 'Housekeeping', description: 'Daily sanitization and fresh linens for a spotless stay.', icon: Sparkles },
   { id: 'restaurant', name: 'Restaurant', description: 'In-house multi-cuisine dining serving authentic Bengali dishes.', icon: Utensils },
-  { id: 'parking', name: 'Parking', description: 'Secure on-premise parking for your vehicles.', icon: Car },
   { id: 'hospitality', name: 'Warm Hospitality', description: 'Attentive and cordial Bengali guest care 24/7.', icon: HeartHandshake }
 ];
 

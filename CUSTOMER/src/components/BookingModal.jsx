@@ -177,14 +177,14 @@ export default function BookingModal({ isOpen, onClose, initialData = {} }) {
         {step < 4 && (
           <div className="booking-stepper-header">
             <div className="stepper-title-wrap">
-              <span className="stepper-tag">BESPOKE RESERVATION</span>
-              <h2 className="stepper-title">Reserve Your Alpine Stay</h2>
+              <span className="stepper-tag">ROOM RESERVATION</span>
+              <h2 className="stepper-title">Reserve Your Stay at AMONTRON</h2>
             </div>
 
             <div className="stepper-indicator">
               <div className={`step-node ${step >= 1 ? 'step-active' : ''}`}>
                 <span>1</span>
-                <label>Sanctuary</label>
+                <label>Room</label>
               </div>
               <div className="step-line" />
               <div className={`step-node ${step >= 2 ? 'step-active' : ''}`}>
@@ -203,7 +203,7 @@ export default function BookingModal({ isOpen, onClose, initialData = {} }) {
         {/* STEP 1: SANCTUARY & DATES */}
         {step === 1 && (
           <div className="booking-step-container">
-            <h3 className="step-heading">Select Dates & Sanctuary</h3>
+            <h3 className="step-heading">Select Dates &amp; Room</h3>
             
             {/* Dates row */}
             <div className="form-row-2">
@@ -243,7 +243,7 @@ export default function BookingModal({ isOpen, onClose, initialData = {} }) {
 
             {/* Room selection list */}
             <div className="room-selection-list">
-              <label className="input-label mb-2">Choose Your Sanctuary</label>
+              <label className="input-label mb-2">Choose Your Room</label>
               <div className="room-picker-grid">
                 {ROOMS.map((room) => {
                   const isSelected = room.id === selectedRoomId;
@@ -257,7 +257,7 @@ export default function BookingModal({ isOpen, onClose, initialData = {} }) {
                       <div className="picker-info">
                         <div className="picker-header">
                           <h4 className="picker-name">{room.name}</h4>
-                          <span className="picker-price">${room.pricePerNight.toLocaleString()}<small>/nt</small></span>
+                          <span className="picker-price">₹{room.pricePerNight.toLocaleString('en-IN')}<small>/nt</small></span>
                         </div>
                         <p className="picker-specs">{room.sqft} sq ft • Up to {room.maxAdults} Adults • {room.view}</p>
                       </div>
@@ -274,7 +274,7 @@ export default function BookingModal({ isOpen, onClose, initialData = {} }) {
             <div className="step-actions">
               <div className="live-preview-price">
                 <span>Estimated Total:</span>
-                <strong>${(selectedRoom.pricePerNight * nights).toLocaleString()}</strong>
+                <strong>₹{(selectedRoom.pricePerNight * nights).toLocaleString('en-IN')}</strong>
               </div>
               <button 
                 type="button" 
@@ -291,7 +291,7 @@ export default function BookingModal({ isOpen, onClose, initialData = {} }) {
         {/* STEP 2: GUESTS & VIP ENHANCEMENTS */}
         {step === 2 && (
           <div className="booking-step-container">
-            <h3 className="step-heading">Guests & VIP Alpine Enhancements</h3>
+            <h3 className="step-heading">Guests &amp; Add-On Services</h3>
 
             {/* Guests Counters */}
             <div className="form-row-2 mb-4">
@@ -340,7 +340,7 @@ export default function BookingModal({ isOpen, onClose, initialData = {} }) {
             <div className="enhancements-section">
               <label className="input-label mb-2">
                 <Sparkles size={14} className="text-gold" />
-                <span>Curated VIP Enhancements (Optional)</span>
+                <span>Add-On Services (Optional)</span>
               </label>
 
               <div className="enhancements-grid">
@@ -358,7 +358,7 @@ export default function BookingModal({ isOpen, onClose, initialData = {} }) {
                       <div className="enh-content">
                         <div className="enh-top">
                           <span className="enh-name">{enh.name}</span>
-                          <span className="enh-price">+${enh.price}</span>
+                          <span className="enh-price">+₹{enh.price.toLocaleString('en-IN')}</span>
                         </div>
                         <p className="enh-desc">{enh.description}</p>
                       </div>
@@ -401,7 +401,7 @@ export default function BookingModal({ isOpen, onClose, initialData = {} }) {
                 <input 
                   type="text"
                   required
-                  placeholder="e.g. Lady Vivienne Hastings"
+                  placeholder="e.g. Rahul Sharma"
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
                   className="booking-input"
@@ -427,7 +427,7 @@ export default function BookingModal({ isOpen, onClose, initialData = {} }) {
                 <input 
                   type="tel"
                   required
-                  placeholder="+41 27 966 8200"
+                  placeholder="+91 98765 43210"
                   value={guestPhone}
                   onChange={(e) => setGuestPhone(e.target.value)}
                   className="booking-input"
@@ -471,37 +471,37 @@ export default function BookingModal({ isOpen, onClose, initialData = {} }) {
             {/* Bill Summary */}
             <div className="booking-summary-receipt">
               <div className="receipt-line">
-                <span>{selectedRoom.name} ({nights} nights × ${selectedRoom.pricePerNight})</span>
-                <span>${baseRoomTotal.toLocaleString()}</span>
+                <span>{selectedRoom.name} ({nights} nights × ₹{selectedRoom.pricePerNight.toLocaleString('en-IN')})</span>
+                <span>₹{baseRoomTotal.toLocaleString('en-IN')}</span>
               </div>
 
               {enhancementsTotal > 0 && (
                 <div className="receipt-line">
-                  <span>VIP Enhancements ({selectedEnhancements.length} selected)</span>
-                  <span>+${enhancementsTotal.toLocaleString()}</span>
+                  <span>Add-On Services ({selectedEnhancements.length} selected)</span>
+                  <span>+₹{enhancementsTotal.toLocaleString('en-IN')}</span>
                 </div>
               )}
 
               {discountAmount > 0 && (
                 <div className="receipt-line receipt-discount">
-                  <span>VIP Privilege Discount ({discountPercent}%)</span>
-                  <span>-${discountAmount.toLocaleString()}</span>
+                  <span>Discount ({discountPercent}%)</span>
+                  <span>-₹{discountAmount.toLocaleString('en-IN')}</span>
                 </div>
               )}
 
               <div className="receipt-line">
-                <span>Alpine Conservation & Tourism Fee (5%)</span>
-                <span>+${resortConservationFee.toLocaleString()}</span>
+                <span>Tourism &amp; Service Fee (5%)</span>
+                <span>+₹{resortConservationFee.toLocaleString('en-IN')}</span>
               </div>
 
               <div className="receipt-divider" />
 
               <div className="receipt-grand-total">
                 <div>
-                  <strong>Total Guaranteed Investment</strong>
-                  <small>Includes all taxes, breakfast & private valet</small>
+                  <strong>Grand Total</strong>
+                  <small>Includes taxes &amp; all service charges</small>
                 </div>
-                <span className="total-amount">${grandTotal.toLocaleString()}</span>
+                <span className="total-amount">₹{grandTotal.toLocaleString('en-IN')}</span>
               </div>
             </div>
 
@@ -571,7 +571,7 @@ export default function BookingModal({ isOpen, onClose, initialData = {} }) {
               </div>
               <div className="confirm-item">
                 <span className="label">Total Amount:</span>
-                <strong className="text-gold">${confirmedBooking.total_price.toLocaleString()}</strong>
+                <strong className="text-gold">₹{confirmedBooking.total_price.toLocaleString('en-IN')}</strong>
               </div>
             </div>
 

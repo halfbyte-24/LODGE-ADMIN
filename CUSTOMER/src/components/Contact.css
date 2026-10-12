@@ -1,12 +1,12 @@
 .bengali-contact-section {
   background-color: var(--bg-primary);
-  padding: 80px 0;
+  padding: 56px 0 48px;
   position: relative;
 }
 
 .contact-header {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 36px;
 }
 
 .contact-description {
@@ -19,8 +19,8 @@
 .bengali-loc-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
-  margin-bottom: 40px;
+  gap: 24px;
+  margin-bottom: 32px;
 }
 
 .loc-card {
@@ -85,10 +85,10 @@
   justify-content: center;
   gap: 40px;
   background: white;
-  padding: 20px 40px;
+  padding: 16px 36px;
   border: 1px solid var(--border-subtle);
   border-radius: 2px;
-  margin-bottom: 60px;
+  margin-bottom: 36px;
   box-shadow: var(--shadow-sm);
 }
 
@@ -102,7 +102,7 @@
 .contact-split-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 50px;
+  gap: 36px;
 }
 
 .bengali-contact-form {

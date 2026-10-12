@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -27,6 +27,7 @@ function ScrollToTop() {
 }
 
 export default function App() {
+  const navigate = useNavigate();
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [bookingInitialData, setBookingInitialData] = useState({});
   const [quickViewRoom, setQuickViewRoom] = useState(null);
@@ -34,13 +35,13 @@ export default function App() {
   const [isSupabaseInfoOpen, setIsSupabaseInfoOpen] = useState(false);
 
   const handleOpenBooking = (initialData = {}) => {
-    setBookingInitialData(initialData);
-    setIsBookingOpen(true);
+    // Navigate directly to dedicated /booking route
+    navigate('/booking', { state: initialData });
   };
 
   const handleSelectRoom = (room) => {
-    setBookingInitialData({ room });
-    setIsBookingOpen(true);
+    // Navigate directly to dedicated /booking route with selected room
+    navigate('/booking', { state: { room } });
   };
 
   const handleQuickView = (room) => {

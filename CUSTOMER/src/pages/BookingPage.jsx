@@ -1,18 +1,26 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Calendar, Users, BedDouble, ArrowRight, CheckCircle2, ShieldCheck, Tag } from 'lucide-react';
 import { ROOM_TYPES } from '../data/hotelData';
 import { createBooking } from '../lib/bookingService';
 import './Pages.css';
 
 export default function BookingPage() {
-  const [selectedRoomId, setSelectedRoomId] = useState(ROOM_TYPES[0].id);
+  const location = useLocation();
+  const navState = location.state || {};
+
+  // Pre-fill selected room from route navigation if available
+  const initialRoomId = navState.room?.id || navState.room_id || navState.room?.room_type_id || ROOM_TYPES[0].id;
+  const matchedRoom = ROOM_TYPES.find(r => r.id === initialRoomId) || ROOM_TYPES[0];
+
+  const [selectedRoomId, setSelectedRoomId] = useState(matchedRoom.id);
   const [checkIn, setCheckIn] = useState(
-    new Date(Date.now() + 86400000).toISOString().split('T')[0]
+    navState.check_in || navState.checkIn || new Date(Date.now() + 86400000).toISOString().split('T')[0]
   );
   const [checkOut, setCheckOut] = useState(
-    new Date(Date.now() + 86400000 * 3).toISOString().split('T')[0]
+    navState.check_out || navState.checkOut || new Date(Date.now() + 86400000 * 3).toISOString().split('T')[0]
   );
-  const [guests, setGuests] = useState('2');
+  const [guests, setGuests] = useState(String(navState.guests || '2'));
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');

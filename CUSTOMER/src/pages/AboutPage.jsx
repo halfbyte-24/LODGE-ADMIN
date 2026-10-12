@@ -1,21 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldCheck, Award, Heart, ArrowRight } from 'lucide-react';
+import bengaliCoupleImg from '../../images/WhatsApp Image 2026-10-07 at 12.45.05 PM (1).jpeg';
 import './AboutPage.css';
 
 export default function AboutPage({ onOpenBooking }) {
   return (
     <div className="bengali-page">
-      {/* Editorial Page Hero */}
-      <section className="bengali-page-hero editorial-hero">
-        <div className="hero-texture-overlay"></div>
-        <img src="/images/art7.jpg" className="editorial-hero-bg" alt="Alpana Motif" />
-        
-        <div className="section-wrapper text-center relative z-2">
+      {/* Clean Compact Page Header */}
+      <section className="bengali-page-hero">
+        <div className="section-wrapper text-center">
           <span className="page-eyebrow">OUR HERITAGE &amp; STORY</span>
-          <h1 className="page-title">
-            Our Story
-          </h1>
+          <h1 className="page-title">Our Story</h1>
+          <div className="page-title-line" />
           <p className="page-description">
             A harmonious blend of warm Bengali hospitality, rich cultural roots, and modern comfort in the heart of Midnapore.
           </p>
@@ -24,9 +21,6 @@ export default function AboutPage({ onOpenBooking }) {
 
       {/* Main Story & Values - Editorial Layout */}
       <section className="editorial-about-story">
-        <img src="/images/art4.jpg" className="about-decor-dancer left-dancer" alt="" />
-        <img src="/images/art4.jpg" className="about-decor-dancer right-dancer" alt="" />
-        
         <div className="section-wrapper">
           <div className="editorial-about-grid">
             <div className="about-editorial-text">
@@ -36,18 +30,13 @@ export default function AboutPage({ onOpenBooking }) {
               </h2>
               
               <p className="about-paragraph lead">
-                AMONTRON HOTEL &amp; RESTAURANT was founded with a singular purpose: to bring the authentic warmth of Bengali 
-                hospitality to travellers seeking pristine comfort, gracious care, and memorable cuisine.
+                <strong>AMONTRON HOTEL &amp; RESTAURANT was founded with a singular purpose: to bring the authentic warmth of Bengali hospitality to travellers seeking pristine comfort, gracious care, and memorable cuisine.</strong>
               </p>
               <p className="about-paragraph">
-                Located conveniently in Midnapore, our property spans three meticulously designed floors featuring 9 well-appointed rooms 
-                across Standard, Deluxe, and Super Deluxe categories. Each room provides whisper-quiet air conditioning, high-speed Wi-Fi, 
-                flatscreen televisions, sanitized linens, and round-the-clock hot water.
+                Located conveniently in Midnapore, our property spans three meticulously designed floors featuring 9 well-appointed rooms across Standard, Deluxe, and Super Deluxe categories. Each room provides whisper-quiet air conditioning, high-speed Wi-Fi, flatscreen televisions, sanitized linens, and round-the-clock hot water.
               </p>
               <p className="about-paragraph">
-                Complementing our accommodations is our signature in-house restaurant, renowned for traditional Bengali delicacies, fragrant 
-                biryanis, authentic North Indian recipes, and savoury tandoor dishes. Whether you are visiting for business, family travels, or 
-                a celebratory event, Amontron is your home away from home.
+                Complementing our accommodations is our signature in-house restaurant, renowned for traditional Bengali delicacies, fragrant biryanis, authentic North Indian recipes, and savoury tandoor dishes. Whether you are visiting for business, family travels, or a celebratory event, Amontron is your home away from home.
               </p>
 
               <div className="about-stats-grid">
@@ -68,7 +57,7 @@ export default function AboutPage({ onOpenBooking }) {
 
             <div className="about-editorial-images">
               <div className="editorial-image-frame main-art-frame">
-                <img src="/images/art5.jpg" alt="Bengali Hospitality Artwork" />
+                <img src={bengaliCoupleImg} alt="Bengali Traditional Couple" />
               </div>
             </div>
           </div>

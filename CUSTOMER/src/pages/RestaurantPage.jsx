@@ -15,11 +15,29 @@ const DEFAULT_RESTAURANT_CATEGORIES = [
   'Drinks'
 ];
 
+// Helper to map hotelData MENU_ITEMS into the requested categories
+function mapMenuItemCategory(cat) {
+  if (!cat) return 'Indian Cuisine';
+  const c = cat.toLowerCase();
+  if (c.includes('breakfast')) return 'Breakfast';
+  if (c.includes('biryani') || c.includes('rice')) return 'Rice & Biryani';
+  if (c.includes('starter') || c.includes('snack') || c.includes('chinese')) return 'Snacks';
+  if (c.includes('beverage') || c.includes('drink')) return 'Drinks';
+  if (c.includes('bengali') || c.includes('mutton kasha') || c.includes('rosogolla') || c.includes('luchi')) return 'Bengali Cuisine';
+  if (c.includes('main course') || c.includes('dessert') || c.includes('tandoor')) return 'Indian Cuisine';
+  return cat;
+}
+
 export default function RestaurantPage({ onOpenBooking }) {
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [menuItems, setMenuItems] = useState([]);
+  const [menuItems, setMenuItems] = useState(() => 
+    MENU_ITEMS.map(item => ({
+      ...item,
+      normalizedCategory: mapMenuItemCategory(item.category)
+    }))
+  );
   const [categories, setCategories] = useState(DEFAULT_RESTAURANT_CATEGORIES);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   
   const [reserved, setReserved] = useState(false);
   const [guestName, setGuestName] = useState('');
@@ -30,19 +48,15 @@ export default function RestaurantPage({ onOpenBooking }) {
     async function fetchMenu() {
       try {
         const { data, error } = await supabase.from('menu_items').select('*');
-        if (error) throw error;
-        
-        if (data && data.length > 0) {
-          setMenuItems(data);
-          const uniqueCats = ['All', ...new Set(data.map(item => item.category).filter(Boolean))];
-          setCategories(uniqueCats.length > 1 ? uniqueCats : DEFAULT_RESTAURANT_CATEGORIES);
-        } else {
-          setMenuItems(MENU_ITEMS);
+        if (!error && data && data.length > 0) {
+          const mapped = data.map(item => ({
+            ...item,
+            normalizedCategory: mapMenuItemCategory(item.category)
+          }));
+          setMenuItems(mapped);
         }
       } catch (err) {
-        setMenuItems(MENU_ITEMS);
-      } finally {
-        setLoading(false);
+        // Fallback already initialized with normalized categories
       }
     }
     fetchMenu();
@@ -50,7 +64,8 @@ export default function RestaurantPage({ onOpenBooking }) {
 
   const filteredItems = (Array.isArray(menuItems) ? menuItems : []).filter(item => {
     if (selectedCategory === 'All') return true;
-    return item.category?.toLowerCase() === selectedCategory.toLowerCase();
+    const cat = item.normalizedCategory || item.category;
+    return cat?.toLowerCase() === selectedCategory.toLowerCase();
   });
 
   const handleTableReserve = (e) => {
@@ -60,14 +75,12 @@ export default function RestaurantPage({ onOpenBooking }) {
 
   return (
     <div className="bengali-page">
-      {/* Editorial Page Hero */}
-      <section className="bengali-page-hero editorial-hero">
-        <div className="hero-texture-overlay"></div>
-        <img src="/images/art4.jpg" className="editorial-hero-bg" alt="Bengali Food Art" />
-        
-        <div className="section-wrapper text-center relative z-2">
+      {/* Clean Compact Page Header */}
+      <section className="bengali-page-hero">
+        <div className="section-wrapper text-center">
           <span className="page-eyebrow">TASTE THE TRADITION</span>
           <h1 className="page-title">Authentic Bengali Flavours</h1>
+          <div className="page-title-line" />
           <p className="page-description">
             Experience delightful multi-cuisine dining. From fragrant Indian biryanis 
             and smoky tandoor specialties to comforting breakfast spreads.

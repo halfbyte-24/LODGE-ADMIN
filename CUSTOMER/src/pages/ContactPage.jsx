@@ -38,14 +38,12 @@ export default function ContactPage() {
 
   return (
     <div className="bengali-page">
-      {/* Editorial Page Hero */}
-      <section className="bengali-page-hero editorial-hero">
-        <div className="hero-texture-overlay"></div>
-        <img src="/images/art7.jpg" className="editorial-hero-bg" alt="Alpana Motif" />
-        
-        <div className="section-wrapper text-center relative z-2">
+      {/* Clean Compact Page Header */}
+      <section className="bengali-page-hero">
+        <div className="section-wrapper text-center">
           <span className="page-eyebrow">GET IN TOUCH</span>
           <h1 className="page-title">CONTACT US</h1>
+          <div className="page-title-line" />
           <p className="page-description">
             Have questions about room bookings, dining reservations, or banquets? 
             Our front desk and reservation teams are available 24/7 to assist you.

@@ -1,128 +1,260 @@
-/* Editorial Rooms Page Specific Styles */
+/* RoomsPage.css — Compact luxury 3-column inventory grid */
 
-.editorial-hero {
-  background: var(--bg-primary);
-  min-height: 40vh;
+.rooms-page-container {
+  padding-top: 76px;
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+}
+
+.rooms-page-hero {
+  padding: 40px 20px 28px;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.rooms-page-hero .page-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  line-height: 1.15;
+}
+
+.rooms-page-hero .page-title-line {
+  width: 90px;
+  height: 2px;
+  background-color: var(--accent-terracotta);
+  margin: 0 auto 16px;
+}
+
+.rooms-page-hero .page-description {
+  max-width: 680px;
+  margin: 0 auto;
+  font-size: 1.02rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+/* Floor Filter Strip */
+.rooms-filter-strip {
+  padding: 24px 0 20px;
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.floor-filter-pills {
   display: flex;
-  align-items: center;
   justify-content: center;
-  position: relative;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.floor-pill {
+  background: white;
+  border: 1px solid var(--border-medium);
+  padding: 9px 22px;
+  border-radius: 30px;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.floor-pill:hover,
+.floor-pill.active {
+  background-color: var(--accent-terracotta);
+  color: white;
+  border-color: var(--accent-terracotta);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(181, 34, 34, 0.25);
+}
+
+/* 9 Rooms Grid (3 desktop, 2 tablet, 1 mobile) */
+.rooms-grid-section {
+  padding: 36px 0 60px;
+}
+
+.nine-rooms-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.room-inventory-card {
+  background: white;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
   overflow: hidden;
-  border-bottom: 1px solid rgba(203, 163, 88, 0.2);
-}
-
-.editorial-hero-bg {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 800px;
-  opacity: 0.05;
-  mix-blend-mode: multiply;
-  pointer-events: none;
-}
-
-.editorial-rooms-list {
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  gap: 80px;
-  padding: 40px 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-.editorial-room-row {
-  display: flex;
-  background: transparent; /* No white card bg! */
+.room-inventory-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-terracotta);
+  box-shadow: var(--shadow-md);
+}
+
+/* Media Box */
+.card-media-wrapper {
   position: relative;
-  gap: 60px;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #f0eae1;
+}
+
+.card-room-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.room-inventory-card:hover .card-room-image {
+  transform: scale(1.02);
+}
+
+.card-ac-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
   align-items: center;
-}
-
-/* Alternate layout for even rows */
-.editorial-room-row:nth-child(even) {
-  flex-direction: row-reverse;
-}
-
-.room-row-decor {
-  position: absolute;
-  top: -30px;
-  left: 45%;
-  width: 150px;
-  opacity: 0.15;
-  mix-blend-mode: multiply;
-  z-index: 0;
-  transform: rotate(15deg);
-}
-
-.editorial-room-row:nth-child(even) .room-row-decor {
-  left: auto;
-  right: 45%;
-  transform: rotate(-15deg);
-}
-
-.editorial-room-row .room-row-image {
-  flex: 1;
-  position: relative;
-  z-index: 2;
-  border: 1px solid var(--border-medium);
-  padding: 10px;
-  background: white;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.05);
-}
-
-.editorial-room-row .room-row-content {
-  flex: 1.2;
-  position: relative;
-  z-index: 2;
-  padding: 20px 0;
-  background: transparent;
-}
-
-.editorial-room-row .room-price-badge {
-  position: absolute;
-  bottom: 20px;
-  right: -20px;
-  background: var(--accent-terracotta);
-  color: white;
-  padding: 10px 20px;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.4rem;
-  box-shadow: 0 4px 15px rgba(164, 63, 53, 0.3);
-}
-
-.editorial-room-row:nth-child(even) .room-price-badge {
-  right: auto;
-  left: -20px;
-}
-
-.editorial-room-row .room-name {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 2.8rem;
-  color: var(--text-primary);
-  margin-bottom: 20px;
-  line-height: 1.1;
-}
-
-.editorial-room-row .room-row-actions {
-  display: flex;
-  gap: 20px;
-  margin-top: 40px;
-}
-
-.editorial-room-row .room-row-actions button,
-.editorial-room-row .room-row-actions a {
-  padding: 14px 30px;
+  gap: 4px;
+  font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: rgba(37, 32, 25, 0.85);
+  color: #ffffff;
 }
 
-@media (max-width: 992px) {
-  .editorial-room-row, .editorial-room-row:nth-child(even) {
-    flex-direction: column;
-    gap: 30px;
+/* Card Info - Clean and restrained */
+.card-info-box {
+  padding: 18px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.card-heading-group {
+  margin-bottom: 10px;
+}
+
+.card-room-number {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 2px 0;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.card-room-type {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.card-price-display {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.card-price-display .price-val {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent-terracotta);
+}
+
+.card-price-display .price-unit {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-left: 4px;
+}
+
+/* Card Action Buttons */
+.card-actions-row {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.btn-card-book {
+  flex: 1.3;
+  background: var(--accent-terracotta);
+  border: 1px solid var(--accent-terracotta);
+  color: white;
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 3px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-family: 'Outfit', sans-serif;
+}
+
+.btn-card-book:hover {
+  background: var(--accent-terracotta-hover);
+  border-color: var(--accent-terracotta-hover);
+}
+
+.btn-card-details {
+  flex: 1;
+  background: white;
+  border: 1px solid var(--border-medium);
+  color: var(--text-primary);
+  padding: 10px 12px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border-radius: 3px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-family: 'Outfit', sans-serif;
+}
+
+.btn-card-details:hover {
+  border-color: var(--accent-terracotta);
+  color: var(--accent-terracotta);
+  background: var(--bg-surface);
+}
+
+/* Responsive Grid */
+@media (max-width: 1024px) {
+  .nine-rooms-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
   }
-  .editorial-room-row .room-price-badge,
-  .editorial-room-row:nth-child(even) .room-price-badge {
-    right: 20px;
-    left: auto;
+}
+
+@media (max-width: 680px) {
+  .nine-rooms-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .rooms-page-hero {
+    padding: 32px 16px 20px;
+  }
+
+  .card-media-wrapper {
+    height: 200px;
   }
 }

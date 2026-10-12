@@ -38,16 +38,14 @@ export default function GalleryPage() {
 
   return (
     <div className="bengali-page">
-      {/* Editorial Page Hero */}
-      <section className="bengali-page-hero editorial-hero">
-        <div className="hero-texture-overlay"></div>
-        <img src="/images/art7.jpg" className="editorial-hero-bg" alt="Alpana Motif" />
-        
-        <div className="section-wrapper text-center relative z-2">
+      {/* Clean Compact Page Header */}
+      <section className="bengali-page-hero">
+        <div className="section-wrapper text-center">
           <span className="page-eyebrow">VISUAL SHOWCASE</span>
           <h1 className="page-title">Photo Gallery</h1>
+          <div className="page-title-line" />
           <p className="page-description">
-            Explore glimpses of AMONTRON HOTEL & RESTAURANT — our elegant rooms, dining halls, banquets, and modern facilities.
+            Explore glimpses of AMONTRON HOTEL &amp; RESTAURANT — our elegant rooms, dining halls, banquets, and modern facilities.
           </p>
         </div>
       </section>

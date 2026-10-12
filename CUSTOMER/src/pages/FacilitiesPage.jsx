@@ -21,14 +21,12 @@ export default function FacilitiesPage({ onOpenBooking }) {
 
   return (
     <div className="bengali-page">
-      {/* Editorial Page Hero */}
-      <section className="bengali-page-hero editorial-hero">
-        <div className="hero-texture-overlay"></div>
-        <img src="/images/art7.jpg" className="editorial-hero-bg" alt="Alpana Motif" />
-        
-        <div className="section-wrapper text-center relative z-2">
+      {/* Clean Compact Page Header */}
+      <section className="bengali-page-hero">
+        <div className="section-wrapper text-center">
           <span className="page-eyebrow">HOSPITALITY & CONVENIENCE</span>
           <h1 className="page-title">Facilities & Amenities</h1>
+          <div className="page-title-line" />
           <p className="page-description">
             Thoughtfully planned amenities and seamless services ensuring every comfort and convenience throughout your stay.
           </p>
@@ -39,7 +37,7 @@ export default function FacilitiesPage({ onOpenBooking }) {
       <section className="editorial-facilities-section">
         <div className="section-wrapper">
           <div className="editorial-facilities-grid">
-            {FACILITIES.map((fac, idx) => (
+            {FACILITIES.filter(fac => fac.id !== 'parking' && fac.id !== 'water' && fac.name !== 'Parking' && fac.name !== '24 Hour Hot Water').map((fac, idx) => (
               <div key={fac.id} className="editorial-facility-card">
                 <div className="facility-icon-wrap">
                   {getIcon(fac.icon)}

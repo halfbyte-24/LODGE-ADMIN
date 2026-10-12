@@ -5,57 +5,13 @@ import './HeroSlider.css';
 const HEADLINES = [
   {
     lang: 'en',
-    fullText: 'Experience Comfort & Taste in the Heart of Bengal',
-    render: (typedText) => {
-      // "Experience Comfort & Taste in the Heart of Bengal"
-      // Part 1: "Experience " (dark text #252019)
-      // Part 2: "Comfort & Taste" (maroon accent #9B1C1C)
-      // Part 3: " in the Heart of Bengal" (forest green #1F4D2E)
-      const part1Target = 'Experience ';
-      const part2Target = 'Comfort & Taste';
-
-      let p1 = '';
-      let p2 = '';
-      let p3 = '';
-
-      if (typedText.length <= part1Target.length) {
-        p1 = typedText;
-      } else if (typedText.length <= part1Target.length + part2Target.length) {
-        p1 = part1Target;
-        p2 = typedText.slice(part1Target.length);
-      } else {
-        p1 = part1Target;
-        p2 = part2Target;
-        p3 = typedText.slice(part1Target.length + part2Target.length);
-      }
-
-      return (
-        <span className="typed-headline-text en-font">
-          {p1 && <span>{p1}</span>}
-          {p2 && <span className="hero-headline-accent">{p2}</span>}
-          {p3 && <span className="hero-headline-dark">{p3}</span>}
-        </span>
-      );
-    }
+    fullText: 'Your Home Away From Home',
+    fontClass: 'en-font'
   },
   {
     lang: 'bn',
-    fullText: 'বাংলার ঐতিহ্য ও আধুনিক স্বাচ্ছন্দ্যের আতিথেয়তা',
-    render: (typedText) => {
-      // Bengali headline: "বাংলার ঐতিহ্য ও আধুনিক স্বাচ্ছন্দ্যের আতিথেয়তা"
-      // Highlight "বাংলার ঐতিহ্য" in maroon and the rest in deep green
-      const splitPoint = 13; // "বাংলার ঐতিহ্য" is 13 graphemes
-      const graphemes = Array.from(typedText);
-      const part1 = graphemes.slice(0, splitPoint).join('');
-      const part2 = graphemes.slice(splitPoint).join('');
-
-      return (
-        <span className="typed-headline-text bn-font">
-          {part1 && <span className="hero-headline-accent">{part1}</span>}
-          {part2 && <span className="hero-headline-dark">{part2}</span>}
-        </span>
-      );
-    }
+    fullText: 'আপন ঘরের আপন ঠিকানা',
+    fontClass: 'bn-font'
   }
 ];
 
@@ -65,7 +21,7 @@ export default function HeroSlider({ onOpenBooking }) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const currentHeadline = HEADLINES[headlineIndex];
-  // Break into graphemes to safely support Bengali Unicode combinations
+  // Break into Unicode graphemes to safely handle Bengali conjuncts and diacritics
   const graphemes = Array.from(currentHeadline.fullText);
 
   useEffect(() => {
@@ -73,24 +29,24 @@ export default function HeroSlider({ onOpenBooking }) {
 
     if (!isDeleting) {
       if (displayedCount < graphemes.length) {
-        // Typing: 90ms per character
+        // Typing: 85ms per character
         timer = setTimeout(() => {
           setDisplayedCount((prev) => prev + 1);
-        }, 90);
+        }, 85);
       } else {
-        // Full headline typed: Pause for 3000ms (3 seconds)
+        // Finished typing headline: Pause for 2800ms
         timer = setTimeout(() => {
           setIsDeleting(true);
-        }, 3000);
+        }, 2800);
       }
     } else {
       if (displayedCount > 0) {
-        // Deleting: 40ms per character
+        // Erasing: 45ms per character
         timer = setTimeout(() => {
           setDisplayedCount((prev) => prev - 1);
-        }, 40);
+        }, 45);
       } else {
-        // Completely deleted: switch to next headline
+        // Fully erased: switch language
         setIsDeleting(false);
         setHeadlineIndex((prev) => (prev + 1) % HEADLINES.length);
       }
@@ -102,14 +58,12 @@ export default function HeroSlider({ onOpenBooking }) {
   const currentTypedText = graphemes.slice(0, displayedCount).join('');
 
   const handleBookingClick = () => {
-    if (onOpenBooking) {
-      onOpenBooking();
-    }
+    // Navigates directly to /booking dedicated route
   };
 
   return (
     <section className="bengali-hero full-width-hero" aria-label="Hero Section">
-      {/* FULL-WIDTH YELLOW BENGALI FOLK-ART BACKGROUND */}
+      {/* FULL-WIDTH ORIGINAL YELLOW BENGALI ARTWORK BACKGROUND */}
       <div className="hero-full-bg" aria-hidden="true">
         <img
           src="/images/art6.jpg"
@@ -119,27 +73,35 @@ export default function HeroSlider({ onOpenBooking }) {
         />
       </div>
 
-      {/* Subtle cream translucent gradient overlay over left text area only */}
-      <div className="hero-overlay-scrim" aria-hidden="true"></div>
+      {/* Warm cream-to-amber translucent scrim overlay to ensure 100% text readability */}
+      <div className="hero-overlay-scrim" aria-hidden="true" />
 
-      {/* Subtle alpona decorative watermark */}
-      <div className="hero-alpona-watermark" aria-hidden="true"></div>
+      {/* Bottom decorative folk art strip */}
+      <div className="hero-bottom-art-strip" aria-hidden="true">
+        <img
+          src="/images/art3.jpg"
+          alt=""
+          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+        />
+      </div>
 
       <div className="hero-container">
-        {/* ====== LEFT SIDE: Hero Content Overlay ====== */}
+        {/* ====== LEFT SIDE: Hero Content ====== */}
         <div className="hero-content">
-          <span className="hero-eyebrow">YOUR HOME AWAY FROM HOME</span>
+          <span className="hero-eyebrow">AMONTRON LODGE &amp; RESTAURANT</span>
 
-          {/* Reserved height container to prevent layout jumping */}
+          {/* Reserved height container with fixed font-size & line-height to prevent jumping */}
           <div className="hero-headline-container">
             <h1 className="hero-headline-animated">
-              {currentHeadline.render(currentTypedText)}
+              <span className={`typed-headline-text ${currentHeadline.fontClass}`}>
+                <span className="hero-headline-accent">{currentTypedText}</span>
+              </span>
               <span className="hero-cursor" aria-hidden="true">|</span>
             </h1>
           </div>
 
           <p className="hero-description">
-            Comfortable rooms, delicious traditional food, and warm Bengali hospitality—all in one place.
+            Experience warm Bengali hospitality, comfortable air-conditioned rooms across 3 floors, and authentic multi-cuisine dining.
           </p>
 
           <div className="hero-actions">
@@ -161,21 +123,13 @@ export default function HeroSlider({ onOpenBooking }) {
           </div>
 
           <div className="hero-trust-strip">
-            <span>✦ 9 Rooms</span>
+            <span>✦ 9 AC Rooms Across 3 Floors</span>
             <span>✦ Multi-Cuisine Restaurant</span>
-            <span>✦ 24/7 Service</span>
+            <span>✦ 24/7 Front Desk</span>
           </div>
         </div>
-      </div>
-
-      {/* ====== BOTTOM DECORATIVE STRIP — Warli folk art border ====== */}
-      <div className="hero-bottom-art-strip" aria-hidden="true">
-        <img
-          src="/images/art3.jpg"
-          alt="Bengali Folk Art Border"
-          onError={(e) => { e.currentTarget.style.display = 'none'; }}
-        />
       </div>
     </section>
   );
 }
+

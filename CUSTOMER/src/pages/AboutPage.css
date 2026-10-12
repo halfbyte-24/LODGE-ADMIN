@@ -1,7 +1,7 @@
 /* Editorial About Page Styles */
 
 .editorial-about-story {
-  padding: 100px 0;
+  padding: 60px 0;
   background: var(--bg-surface);
   position: relative;
   overflow: hidden;
@@ -95,11 +95,11 @@
 
 .editorial-image-frame {
   position: relative;
-  background: white;
-  padding: 14px;
-  border: 1px solid var(--border-subtle);
+  background: transparent;
+  padding: 0;
+  border: none;
   border-radius: 4px;
-  box-shadow: 0 12px 36px rgba(37, 32, 25, 0.08);
+  box-shadow: none;
   width: 100%;
   max-width: 440px;
 }
@@ -107,10 +107,11 @@
 .editorial-image-frame img {
   width: 100%;
   height: auto;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
+  max-height: 480px;
+  object-fit: contain;
+  object-position: center;
   display: block;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
 .main-art-frame {
@@ -120,9 +121,9 @@
 
 /* Pillars Section */
 .editorial-pillars-section {
-  padding: 100px 0;
+  padding: 60px 0;
   background: var(--bg-primary);
-  border-top: 1px solid rgba(203, 163, 88, 0.2);
+  border-top: 1px solid rgba(203, 163, 88, 0.15);
 }
 
 .pillars-grid {
@@ -166,11 +167,10 @@
 @media (max-width: 992px) {
   .editorial-about-grid {
     grid-template-columns: 1fr;
-    gap: 60px;
+    gap: 40px;
   }
   .about-editorial-images {
-    height: 400px;
-    max-width: 500px;
+    max-width: 420px;
     margin: 0 auto;
     width: 100%;
   }
@@ -178,3 +178,4 @@
     grid-template-columns: 1fr;
   }
 }
+

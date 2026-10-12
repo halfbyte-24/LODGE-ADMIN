@@ -57,12 +57,12 @@ export default function Navbar({ onOpenBookingModal, onOpenBooking }) {
           </nav>
 
           <div className="navbar-action-right">
-            <button 
+            <Link 
+              to="/booking"
               className="btn-terracotta nav-book-btn"
-              onClick={handleBooking}
             >
               Book a Room &rarr;
-            </button>
+            </Link>
 
             <button 
               className="mobile-hamburger-btn"
@@ -101,9 +101,13 @@ export default function Navbar({ onOpenBookingModal, onOpenBooking }) {
           </nav>
 
           <div className="mobile-drawer-footer">
-            <button className="btn-terracotta w-100 mb-3" onClick={() => { setMobileMenuOpen(false); if(handleBooking) handleBooking(); }}>
+            <Link 
+              to="/booking" 
+              className="btn-terracotta w-100 mb-3 text-center" 
+              onClick={() => setMobileMenuOpen(false)}
+            >
               ONLINE RESERVATION
-            </button>
+            </Link>
             <a href={`tel:${HOTEL_INFO.phone}`} className="drawer-phone-btn">
               <Phone size={16} /> {HOTEL_INFO.phoneDisplay}
             </a>

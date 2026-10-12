@@ -20,12 +20,12 @@ export default function Footer({ onOpenBooking }) {
           <div className="footer-col footer-brand-section">
             <h2 className="footer-brand-name">{HOTEL_INFO.name}</h2>
             <div className="footer-brand-subtitle">HOTEL &amp; RESTAURANT</div>
-            <button
-              className="btn-terracotta footer-book-btn"
-              onClick={() => onOpenBooking && onOpenBooking()}
+            <Link
+              to="/booking"
+              className="btn-terracotta footer-book-btn inline-block text-center"
             >
               Book a Room &rarr;
-            </button>
+            </Link>
           </div>
 
           {/* COLUMN 2: Quick Links */}

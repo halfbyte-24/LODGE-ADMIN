@@ -13,16 +13,33 @@ export default function FloatingBookingBar({ onCheckAvailability, defaultRoomId 
   useEffect(() => {
     const today = new Date();
     const inD = new Date(today);
-    inD.setDate(today.getDate() + 2);
+    inD.setDate(today.getDate() + 1);
     const outD = new Date(inD);
     outD.setDate(inD.getDate() + 2);
 
-    setCheckIn(inD.toISOString().split('T')[0]);
-    setCheckOut(outD.toISOString().split('T')[0]);
+    const inStr = inD.toISOString().split('T')[0];
+    const outStr = outD.toISOString().split('T')[0];
+
+    setCheckIn(inStr);
+    setCheckOut(outStr);
   }, []);
+
+  const handleCheckInChange = (newIn) => {
+    setCheckIn(newIn);
+    // If checkOut is <= newIn, advance checkOut by 1 day
+    if (checkOut && checkOut <= newIn) {
+      const nextDay = new Date(newIn);
+      nextDay.setDate(nextDay.getDate() + 1);
+      setCheckOut(nextDay.toISOString().split('T')[0]);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (checkIn && checkOut && checkOut <= checkIn) {
+      alert('Check-out date must be later than check-in date.');
+      return;
+    }
     const selectedRoom = ROOM_TYPES.find(r => r.id === selectedRoomId) || ROOM_TYPES[0];
     onCheckAvailability({
       room_id: selectedRoom.id,
@@ -32,6 +49,16 @@ export default function FloatingBookingBar({ onCheckAvailability, defaultRoomId 
       guests: parseInt(guests, 10)
     });
   };
+
+  // Minimum selectable dates
+  const todayStr = new Date().toISOString().split('T')[0];
+  const minCheckOutStr = checkIn
+    ? (() => {
+        const d = new Date(checkIn);
+        d.setDate(d.getDate() + 1);
+        return d.toISOString().split('T')[0];
+      })()
+    : todayStr;
 
   return (
     <div className="floating-booking-wrapper">
@@ -70,7 +97,8 @@ export default function FloatingBookingBar({ onCheckAvailability, defaultRoomId 
               type="date"
               className="res-input"
               value={checkIn}
-              onChange={(e) => setCheckIn(e.target.value)}
+              min={todayStr}
+              onChange={(e) => handleCheckInChange(e.target.value)}
               required
             />
           </div>
@@ -87,6 +115,7 @@ export default function FloatingBookingBar({ onCheckAvailability, defaultRoomId 
               type="date"
               className="res-input"
               value={checkOut}
+              min={minCheckOutStr}
               onChange={(e) => setCheckOut(e.target.value)}
               required
             />
