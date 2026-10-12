@@ -13,8 +13,8 @@ export default function LocationPage() {
           <h1 className="page-title">Location & How to Reach</h1>
           <div className="page-title-line" />
           <p className="page-description">
-            Conveniently situated in Midnapore, West Bengal — easily accessible from the railway station, 
-            bus terminus, and major highways.
+            Conveniently situated in Kamarpukur, West Bengal — easily accessible from the railway station, 
+            bus terminus, and Ramakrishna Math pilgrimage routes.
           </p>
         </div>
       </section>
@@ -30,7 +30,7 @@ export default function LocationPage() {
               <div className="editorial-info-box">
                 <MapPin size={32} className="text-terracotta mb-4" />
                 <h3 className="location-heading">AMONTRON HOTEL & RESTAURANT</h3>
-                <p className="location-address">{HOTEL_INFO.address}</p>
+                <p className="location-address">{HOTEL_INFO.address.full || "Near Kamarpukur Ramakrishna Math, Kamarpukur, West Bengal 712612, India"}</p>
                 <div className="contact-row">
                   <div className="contact-item">
                     <Phone size={18} className="text-gold" />
@@ -44,7 +44,7 @@ export default function LocationPage() {
 
                 <div className="location-action-buttons mt-4 flex flex-wrap gap-3">
                   <a 
-                    href="https://maps.google.com/?q=Midnapore+West+Bengal" 
+                    href={HOTEL_INFO.coordinates.googleMapsUrl || "https://www.google.com/maps/search/?api=1&query=Kamarpukur,+West+Bengal,+India"} 
                     target="_blank" 
                     rel="noreferrer" 
                     className="btn-terracotta inline-flex items-center gap-2"
@@ -69,27 +69,27 @@ export default function LocationPage() {
               </div>
 
               <div className="editorial-info-box">
-                <h3 className="location-heading mb-6">Key Transit Landmarks</h3>
+                <h3 className="location-heading mb-6">Key Transit & Pilgrimage Landmarks</h3>
                 <div className="transit-list">
                   <div className="transit-item">
                     <Navigation size={24} className="text-terracotta flex-shrink-0" />
                     <div>
-                      <strong>Midnapore Railway Station</strong>
-                      <p>Approx. 10 - 15 minutes by auto or taxi</p>
+                      <strong>Kamarpukur Ramakrishna Math & Temple</strong>
+                      <p>Approx. 2 - 5 minutes drive / walking distance</p>
                     </div>
                   </div>
                   <div className="transit-item">
                     <Navigation size={24} className="text-terracotta flex-shrink-0" />
                     <div>
-                      <strong>Central Bus Terminus</strong>
-                      <p>Approx. 8 - 10 minutes drive</p>
+                      <strong>Jairambati Matri Mandir</strong>
+                      <p>Approx. 10 - 15 minutes drive (5 km)</p>
                     </div>
                   </div>
                   <div className="transit-item">
                     <Navigation size={24} className="text-terracotta flex-shrink-0" />
                     <div>
-                      <strong>Kolkata Airport (CCU)</strong>
-                      <p>Approx. 2.5 - 3 hours via National Highway 16</p>
+                      <strong>Tarakeswar / Arambagh Railway Station</strong>
+                      <p>Easily connected via direct bus, taxi, and auto-rickshaw</p>
                     </div>
                   </div>
                 </div>
@@ -110,7 +110,7 @@ export default function LocationPage() {
               <div className="editorial-map-frame">
                 <iframe
                   title="Amontron Hotel Location Map"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d118029.0886884025!2d87.24151741695286!3d22.422204918731308!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a1d440263f350c9%3A0xb3f5ea5582f3ef65!2sMidnapore%2C%20West%20Bengal!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                  src="https://maps.google.com/maps?q=Kamarpukur,+West+Bengal,+India&hl=en&z=14&output=embed"
                   width="100%"
                   className="google-map-iframe"
                   allowFullScreen=""

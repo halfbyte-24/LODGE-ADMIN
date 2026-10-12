@@ -26,7 +26,7 @@ export default function TestimonialsSection() {
           <h2 className="section-title">What Our Guests Say</h2>
           <div className="section-title-line" />
           <p className="section-subtitle">
-            Genuine experiences shared by travelers who made Amontron Hotel & Restaurant their choice in Midnapore.
+            Genuine experiences shared by travelers who made Amontron Hotel & Restaurant their choice in Kamarpukur.
           </p>
         </div>
 

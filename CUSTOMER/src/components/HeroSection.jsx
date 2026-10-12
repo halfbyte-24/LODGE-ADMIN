@@ -74,7 +74,7 @@ export default function HeroSection({ onOpenBookingModal }) {
           </h1>
 
           <p className="hero-tagline-quote">
-            "{HOTEL_INFO.tagline} in Midnapore."
+            "{HOTEL_INFO.tagline} in Kamarpukur."
           </p>
 
           <p className="hero-slide-description">

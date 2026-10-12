@@ -63,7 +63,7 @@ export default function App() {
           <Route path="/rooms" element={<RoomsPage onOpenBooking={handleOpenBooking} onSelectRoom={handleSelectRoom} onQuickView={handleQuickView} />} />
           <Route path="/room/:id" element={<RoomDetailPage onOpenBooking={handleOpenBooking} />} />
           <Route path="/restaurant" element={<RestaurantPage />} />
-          <Route path="/about" element={<AboutPage />} />
+          <Route path="/about" element={<AboutPage onOpenBooking={handleOpenBooking} />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/facilities" element={<FacilitiesPage />} />
           <Route path="/gallery" element={<GalleryPage />} />

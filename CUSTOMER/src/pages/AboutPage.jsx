@@ -14,7 +14,7 @@ export default function AboutPage({ onOpenBooking }) {
           <h1 className="page-title">Our Story</h1>
           <div className="page-title-line" />
           <p className="page-description">
-            A harmonious blend of warm Bengali hospitality, rich cultural roots, and modern comfort in the heart of Midnapore.
+            A harmonious blend of warm Bengali hospitality, rich cultural roots, and modern comfort in the heart of Kamarpukur, West Bengal.
           </p>
         </div>
       </section>
@@ -33,7 +33,7 @@ export default function AboutPage({ onOpenBooking }) {
                 <strong>AMONTRON HOTEL &amp; RESTAURANT was founded with a singular purpose: to bring the authentic warmth of Bengali hospitality to travellers seeking pristine comfort, gracious care, and memorable cuisine.</strong>
               </p>
               <p className="about-paragraph">
-                Located conveniently in Midnapore, our property spans three meticulously designed floors featuring 9 well-appointed rooms across Standard, Deluxe, and Super Deluxe categories. Each room provides whisper-quiet air conditioning, high-speed Wi-Fi, flatscreen televisions, sanitized linens, and round-the-clock hot water.
+                Located conveniently in Kamarpukur, West Bengal, our property spans three meticulously designed floors featuring 9 well-appointed rooms across Standard, Deluxe, and Super Deluxe categories. Each room provides whisper-quiet air conditioning, high-speed Wi-Fi, flatscreen televisions, sanitized linens, and round-the-clock hot water.
               </p>
               <p className="about-paragraph">
                 Complementing our accommodations is our signature in-house restaurant, renowned for traditional Bengali delicacies, fragrant biryanis, authentic North Indian recipes, and savoury tandoor dishes. Whether you are visiting for business, family travels, or a celebratory event, Amontron is your home away from home.
@@ -111,9 +111,13 @@ export default function AboutPage({ onOpenBooking }) {
           </p>
           <div className="cta-actions">
             <Link to="/rooms" className="btn-outline-gold">VIEW ROOMS</Link>
-            <button className="btn-terracotta" onClick={() => onOpenBooking && onOpenBooking({})}>
-              BOOK YOUR STAY <ArrowRight size={16} className="ml-2" />
-            </button>
+            <Link 
+              to="/booking" 
+              className="btn-terracotta inline-flex items-center gap-2"
+              onClick={() => { if (onOpenBooking) onOpenBooking({}); }}
+            >
+              BOOK YOUR STAY <ArrowRight size={16} />
+            </Link>
           </div>
         </div>
       </section>

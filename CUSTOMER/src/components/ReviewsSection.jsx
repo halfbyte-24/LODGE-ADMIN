@@ -57,7 +57,7 @@ export default function ReviewsSection() {
           <div className="accred-item">
             <span className="accred-star">★ ★ ★ ★ ★</span>
             <strong>GUESTS' CHOICE</strong>
-            <small>Top Rated Hotel in Midnapore</small>
+            <small>Top Rated Hotel in Kamarpukur</small>
           </div>
         </div>
 

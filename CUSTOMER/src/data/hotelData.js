@@ -5,7 +5,7 @@ export const HERO_SLIDES = [
   {
     id: "exterior",
     title: "AMONTRON HOTEL & RESTAURANT",
-    subtitle: "Comfort, hospitality and memorable moments in the heart of Midnapore",
+    subtitle: "Comfort, hospitality and memorable moments in the heart of Kamarpukur",
     tagline: "WELCOME TO",
     dayImage: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=2000&q=85",
     nightImage: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2000&q=85",

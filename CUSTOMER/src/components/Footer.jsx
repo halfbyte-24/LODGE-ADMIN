@@ -50,14 +50,14 @@ export default function Footer({ onOpenBooking }) {
                 <span className="contact-icon-col">
                   <MapPin size={17} className="contact-icon" />
                 </span>
-                <span className="contact-text">Station Road, Near Central Plaza, Midnapore, West Bengal 721101, India</span>
+                <span className="contact-text">{HOTEL_INFO.address.full || "Near Kamarpukur Ramakrishna Math, Kamarpukur, West Bengal 712612, India"}</span>
               </li>
               <li className="contact-item">
                 <span className="contact-icon-col">
                   <Phone size={17} className="contact-icon" />
                 </span>
                 <span className="contact-text">
-                  <a href={`tel:+${phoneDigits}`}>+91 98765 43210</a>
+                  <a href={`tel:+${phoneDigits}`}>{HOTEL_INFO.phoneDisplay || HOTEL_INFO.phone}</a>
                 </span>
               </li>
               <li className="contact-item">
@@ -65,7 +65,7 @@ export default function Footer({ onOpenBooking }) {
                   <Mail size={17} className="contact-icon" />
                 </span>
                 <span className="contact-text">
-                  <a href="mailto:reservations@amontronhotel.com">reservations@amontronhotel.com</a>
+                  <a href={`mailto:${HOTEL_INFO.email}`}>{HOTEL_INFO.email}</a>
                 </span>
               </li>
             </ul>
@@ -77,7 +77,7 @@ export default function Footer({ onOpenBooking }) {
             <div className="footer-map-frame">
               <iframe
                 title="AMONTRON Hotel & Restaurant Location Map"
-                src="https://maps.google.com/maps?q=22.4257,87.3199&hl=en&z=15&output=embed"
+                src="https://maps.google.com/maps?q=Kamarpukur,+West+Bengal,+India&hl=en&z=14&output=embed"
                 width="100%"
                 height="160"
                 style={{ border: 0 }}

@@ -17,19 +17,19 @@ export const HOTEL_INFO = {
 
   // Location details
   address: {
-    line1: "Station Road, Near Central Plaza",
-    city: "Midnapore",
+    line1: "Near Kamarpukur Ramakrishna Math",
+    city: "Kamarpukur",
     state: "West Bengal",
-    pincode: "721101",
+    pincode: "712612",
     country: "India",
-    full: "Station Road, Near Central Plaza, Midnapore, West Bengal 721101, India"
+    full: "Near Kamarpukur Ramakrishna Math, Kamarpukur, West Bengal 712612, India"
   },
   
-  // Coordinates for maps & directions
+  // Coordinates for maps & directions (Kamarpukur: ~22.8988, 87.6534)
   coordinates: {
-    latitude: 22.4257,
-    longitude: 87.3199,
-    googleMapsUrl: "https://maps.google.com/?q=22.4257,87.3199"
+    latitude: 22.8988,
+    longitude: 87.6534,
+    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Kamarpukur,+West+Bengal,+India"
   },
 
   // Operational Timings
