@@ -62,6 +62,27 @@ export default function BookingsManagement() {
     setUpdating(true);
     setActionMessage({ type: '', text: '' });
     try {
+      const bkg = bookings.find(b => b.id === bookingId);
+
+      // Overlap protection: validate before assigning a physical room
+      if (assignedRoom && (newStatus === 'reserved' || newStatus === 'checked_in') && bkg) {
+        const { data: conflicts, error: conflictErr } = await supabase
+          .from('bookings')
+          .select('id, booking_number, check_in, check_out, customers(full_name)')
+          .eq('room_id', assignedRoom)
+          .neq('id', bookingId)
+          .not('booking_status', 'in', '("cancelled","checked_out")')
+          .lt('check_in', bkg.check_out)
+          .gt('check_out', bkg.check_in);
+        if (conflictErr) throw conflictErr;
+        if (conflicts && conflicts.length > 0) {
+          const c = conflicts[0];
+          setActionMessage({ type: 'error', text: `Overlap conflict: Room already booked by "${c.customers?.full_name || 'Another guest'}" (${c.booking_number}) from ${c.check_in} to ${c.check_out}. Pick a different room.` });
+          setUpdating(false);
+          return;
+        }
+      }
+
       const updatePayload = {
         booking_status: newStatus,
         updated_at: new Date().toISOString()
@@ -79,7 +100,6 @@ export default function BookingsManagement() {
       if (bkgErr) throw bkgErr;
 
       // Synchronize room occupancy
-      const bkg = bookings.find(b => b.id === bookingId);
       const targetRoomId = assignedRoom || bkg?.room_id;
 
       if (targetRoomId) {
