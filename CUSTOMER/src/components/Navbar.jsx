@@ -34,12 +34,51 @@ export default function Navbar({ onOpenBookingModal, onOpenBooking }) {
     return false;
   };
 
+  const clickCountRef = React.useRef(0);
+  const clickTimerRef = React.useRef(null);
+
+  const handleBrandClick = (e) => {
+    // Increment consecutive clicks
+    clickCountRef.current += 1;
+
+    // Reset timer on every click (within 2 seconds between clicks)
+    if (clickTimerRef.current) {
+      clearTimeout(clickTimerRef.current);
+    }
+
+    if (clickCountRef.current >= 7) {
+      // Triggered hidden access!
+      clickCountRef.current = 0;
+      clearTimeout(clickTimerRef.current);
+      clickTimerRef.current = null;
+
+      // Navigate to admin entry (port 5174 in dev, /admin in prod, or configurable via env)
+      const adminUrl = import.meta.env.VITE_ADMIN_URL || (
+        window.location.port === '5173'
+          ? `${window.location.protocol}//${window.location.hostname}:5174/login`
+          : `${window.location.origin}/admin`
+      );
+      window.location.href = adminUrl;
+      return;
+    }
+
+    // Set timeout to reset count if user pauses for more than 2 seconds
+    clickTimerRef.current = setTimeout(() => {
+      clickCountRef.current = 0;
+    }, 2000);
+
+    // Normal click behavior: If already on home, scroll to top smoothly
+    if (location.pathname === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <>
       <header className={`bengali-navbar ${isScrolled ? 'navbar-sticky' : ''}`}>
         <div className="navbar-container">
           
-          <Link to="/" className="navbar-brand">
+          <Link to="/" className="navbar-brand" onClick={handleBrandClick}>
             <span className="brand-primary-name">{HOTEL_INFO.name}</span>
             <span className="brand-sub-title">LODGE & RESTAURANT</span>
           </Link>

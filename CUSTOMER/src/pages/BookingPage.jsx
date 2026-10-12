@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Calendar, Users, BedDouble, ArrowRight, CheckCircle2, ShieldCheck, Tag } from 'lucide-react';
-import { ROOM_TYPES } from '../data/hotelData';
+import { Calendar, Users, BedDouble, ArrowRight, CheckCircle2, Check, ShieldCheck, Tag, RefreshCw, AlertCircle } from 'lucide-react';
+import { ROOM_TYPES, PHYSICAL_ROOMS } from '../data/hotelData';
+import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 import { createBooking } from '../lib/bookingService';
 import './Pages.css';
 
@@ -9,11 +10,7 @@ export default function BookingPage() {
   const location = useLocation();
   const navState = location.state || {};
 
-  // Pre-fill selected room from route navigation if available
-  const initialRoomId = navState.room?.id || navState.room_id || navState.room?.room_type_id || ROOM_TYPES[0].id;
-  const matchedRoom = ROOM_TYPES.find(r => r.id === initialRoomId) || ROOM_TYPES[0];
-
-  const [selectedRoomId, setSelectedRoomId] = useState(matchedRoom.id);
+  // Form parameters
   const [checkIn, setCheckIn] = useState(
     navState.check_in || navState.checkIn || new Date(Date.now() + 86400000).toISOString().split('T')[0]
   );
@@ -26,39 +23,226 @@ export default function BookingPage() {
   const [email, setEmail] = useState('');
   const [specialRequests, setSpecialRequests] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [bookingConfirmed, setBookingConfirmed] = useState(null);
 
-  const selectedRoom = ROOM_TYPES.find(r => r.id === selectedRoomId) || ROOM_TYPES[0];
+  // Live rooms from Supabase / fallback
+  const [allRooms, setAllRooms] = useState([]);
+  const [bookedRoomIds, setBookedRoomIds] = useState(new Set());
+  const [roomsLoading, setRoomsLoading] = useState(true);
+
+  // Selected room IDs (Set or Array of room IDs)
+  const [selectedRoomIds, setSelectedRoomIds] = useState([]);
+
+  // 1. Fetch live rooms from Supabase
+  useEffect(() => {
+    async function fetchRooms() {
+      setRoomsLoading(true);
+      try {
+        if (!isSupabaseConfigured || !supabase) throw new Error('Supabase not configured');
+        const { data, error } = await supabase
+          .from('rooms')
+          .select('id, room_number, room_type, floor, price_per_night, status')
+          .order('room_number', { ascending: true });
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          // Normalize room records
+          const mapped = data.map(r => {
+            const typeKey = (r.room_type || '').toLowerCase();
+            const matchedType = ROOM_TYPES.find(rt =>
+              rt.name.toLowerCase().includes(typeKey) ||
+              typeKey.includes(rt.id.replace('-room', '').replace('-', ' '))
+            ) || ROOM_TYPES[0];
+
+            return {
+              id: r.id,
+              room_number: String(r.room_number),
+              floor: parseInt(r.floor, 10) || (r.room_number.startsWith('1') ? 1 : r.room_number.startsWith('2') ? 2 : 3),
+              room_type: r.room_type || matchedType.name,
+              categoryName: matchedType.name,
+              price_per_night: Number(r.price_per_night) || matchedType.price,
+              status: r.status,
+              image: matchedType.image,
+              bedType: matchedType.bedType
+            };
+          });
+          setAllRooms(mapped);
+        } else {
+          // Fallback to PHYSICAL_ROOMS
+          const mapped = PHYSICAL_ROOMS.map(pr => {
+            const matchedType = ROOM_TYPES.find(rt => rt.id === pr.room_type_id) || ROOM_TYPES[0];
+            return {
+              id: pr.id,
+              room_number: pr.room_number,
+              floor: pr.floor,
+              room_type: matchedType.name,
+              categoryName: matchedType.name,
+              price_per_night: pr.price,
+              status: pr.status,
+              image: matchedType.image,
+              bedType: matchedType.bedType
+            };
+          });
+          setAllRooms(mapped);
+        }
+      } catch (err) {
+        console.warn('BookingPage: Using default room inventory:', err.message);
+        const mapped = PHYSICAL_ROOMS.map(pr => {
+          const matchedType = ROOM_TYPES.find(rt => rt.id === pr.room_type_id) || ROOM_TYPES[0];
+          return {
+            id: pr.id,
+            room_number: pr.room_number,
+            floor: pr.floor,
+            room_type: matchedType.name,
+            categoryName: matchedType.name,
+            price_per_night: pr.price,
+            status: pr.status,
+            image: matchedType.image,
+            bedType: matchedType.bedType
+          };
+        });
+        setAllRooms(mapped);
+      } finally {
+        setRoomsLoading(false);
+      }
+    }
+    fetchRooms();
+  }, []);
+
+  // 2. Fetch existing bookings overlapping with [checkIn, checkOut)
+  useEffect(() => {
+    async function checkOverlaps() {
+      if (!checkIn || !checkOut || !isSupabaseConfigured || !supabase) {
+        setBookedRoomIds(new Set());
+        return;
+      }
+
+      try {
+        const { data: overlappingBookings, error } = await supabase
+          .from('bookings')
+          .select('room_id, check_in, check_out, booking_status')
+          .not('booking_status', 'in', '("cancelled","checked_out")')
+          .lt('check_in', checkOut)
+          .gt('check_out', checkIn);
+
+        if (!error && overlappingBookings) {
+          const bookedIds = new Set(overlappingBookings.map(b => b.room_id).filter(Boolean));
+          setBookedRoomIds(bookedIds);
+
+          // If currently selected room became booked due to date change, unselect it
+          setSelectedRoomIds(prev => prev.filter(id => !bookedIds.has(id)));
+        }
+      } catch (err) {
+        console.warn('Could not query overlapping bookings:', err.message);
+      }
+    }
+
+    checkOverlaps();
+  }, [checkIn, checkOut]);
+
+  // Initial selection when rooms finish loading (only select ONE room by default, never all)
+  useEffect(() => {
+    if (allRooms.length > 0 && selectedRoomIds.length === 0) {
+      // Find requested room from navigation or pick first available room
+      const requestedId = navState.room?.id || navState.room_id;
+      let candidate = allRooms.find(r => (r.id === requestedId || r.room_number === requestedId) && !bookedRoomIds.has(r.id));
+      if (!candidate) {
+        candidate = allRooms.find(r => !bookedRoomIds.has(r.id));
+      }
+      if (candidate) {
+        setSelectedRoomIds([candidate.id]);
+      }
+    }
+  }, [allRooms, bookedRoomIds]);
+
+  // Toggle selection for an individual room
+  const toggleRoomSelection = (roomId) => {
+    if (bookedRoomIds.has(roomId)) return; // cannot select booked room
+
+    setSelectedRoomIds(prev => {
+      if (prev.includes(roomId)) {
+        // Allow unchecking, but prevent empty selection if user tries to uncheck the last one
+        const updated = prev.filter(id => id !== roomId);
+        return updated.length > 0 ? updated : prev;
+      } else {
+        return [...prev, roomId];
+      }
+    });
+  };
+
+  // Group rooms by floor
+  const floors = useMemo(() => {
+    const map = { 1: [], 2: [], 3: [] };
+    allRooms.forEach(room => {
+      const fl = room.floor || 1;
+      if (!map[fl]) map[fl] = [];
+      map[fl].push(room);
+    });
+    return [
+      { floorNum: 1, label: '1st Floor', rooms: map[1] || [] },
+      { floorNum: 2, label: '2nd Floor', rooms: map[2] || [] },
+      { floorNum: 3, label: '3rd Floor', rooms: map[3] || [] }
+    ];
+  }, [allRooms]);
 
   // Calculate nights
   const d1 = new Date(checkIn);
   const d2 = new Date(checkOut);
   const nights = Math.max(1, Math.round((d2 - d1) / (1000 * 60 * 60 * 24)));
-  const totalPrice = (selectedRoom.pricePerNight || selectedRoom.price) * nights;
+
+  // Selected room objects and price calculations
+  const selectedRooms = useMemo(() => {
+    return allRooms.filter(r => selectedRoomIds.includes(r.id));
+  }, [allRooms, selectedRoomIds]);
+
+  const nightlyRateTotal = useMemo(() => {
+    return selectedRooms.reduce((sum, r) => sum + r.price_per_night, 0);
+  }, [selectedRooms]);
+
+  const totalPrice = nightlyRateTotal * nights;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (selectedRooms.length === 0) {
+      setSubmitError('Please select at least one room.');
+      return;
+    }
+    setSubmitError('');
     setIsSubmitting(true);
 
     try {
       const result = await createBooking({
-        room_id: selectedRoom.id,
-        room_name: selectedRoom.name,
+        rooms: selectedRooms.map(r => ({
+          room_id: r.id,
+          room_number: r.room_number,
+          price_per_night: r.price_per_night,
+          room_rate: r.price_per_night
+        })),
         guest_name: name,
         guest_email: email,
         guest_phone: phone,
         check_in: checkIn,
         check_out: checkOut,
         guests_count: parseInt(guests, 10),
+        nights: nights,
         message: specialRequests,
         total_price: totalPrice,
         status: 'pending',
         source: 'website'
       });
 
+      if (result && !result.success && result.error) {
+        setSubmitError(result.error);
+        setIsSubmitting(false);
+        return;
+      }
+
       setBookingConfirmed({
-        reference: result?.data?.reference_no || 'AMN-' + Math.floor(10000 + Math.random() * 90000),
-        roomName: selectedRoom.name,
+        reference: result?.reference_no || result?.data?.booking_number || 'AMN-' + Math.floor(10000 + Math.random() * 90000),
+        rooms: selectedRooms,
+        roomNames: selectedRooms.map(r => `Room ${r.room_number} (${r.categoryName})`).join(', '),
         nights,
         totalPrice,
         checkIn,
@@ -66,10 +250,11 @@ export default function BookingPage() {
         guestName: name
       });
     } catch (err) {
-      console.error(err);
+      console.error('Booking submission error:', err);
       setBookingConfirmed({
         reference: 'AMN-' + Math.floor(10000 + Math.random() * 90000),
-        roomName: selectedRoom.name,
+        rooms: selectedRooms,
+        roomNames: selectedRooms.map(r => `Room ${r.room_number} (${r.categoryName})`).join(', '),
         nights,
         totalPrice,
         checkIn,
@@ -103,30 +288,28 @@ export default function BookingPage() {
               {/* Form Column */}
               <div className="booking-form-box glass-card">
                 <h2>Reservation Details</h2>
+                
+                {submitError && (
+                  <div style={{
+                    background: '#fef2f2',
+                    border: '1px solid #f87171',
+                    color: '#991b1b',
+                    padding: '12px 16px',
+                    borderRadius: '8px',
+                    marginBottom: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    fontSize: '0.9rem'
+                  }}>
+                    <AlertCircle size={18} />
+                    <span>{submitError}</span>
+                  </div>
+                )}
+
                 <form onSubmit={handleSubmit} className="page-booking-form">
                   
-                  {/* Room Type Selector */}
-                  <div className="form-group">
-                    <label>Select Room Type *</label>
-                    <div className="room-type-picker-grid">
-                      {ROOM_TYPES.map((rt) => (
-                        <div
-                          key={rt.id}
-                          className={`room-picker-card ${selectedRoomId === rt.id ? 'active' : ''}`}
-                          onClick={() => setSelectedRoomId(rt.id)}
-                        >
-                          <img src={rt.image} alt={rt.name} className="picker-img" />
-                          <div className="picker-info">
-                            <strong>{rt.name}</strong>
-                            <span>₹{(rt.pricePerNight || rt.price).toLocaleString()} / night</span>
-                            <small>{rt.floorInfo}</small>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Dates & Guests */}
+                  {/* Dates & Guests First to determine availability */}
                   <div className="form-row-3">
                     <div className="form-group">
                       <label>Check-in Date *</label>
@@ -149,18 +332,71 @@ export default function BookingPage() {
                       />
                     </div>
                     <div className="form-group">
-                      <label>Guests *</label>
+                      <label>Total Guests *</label>
                       <select value={guests} onChange={(e) => setGuests(e.target.value)}>
                         <option value="1">1 Adult</option>
                         <option value="2">2 Adults</option>
                         <option value="3">3 Adults</option>
                         <option value="4">4 Adults / Family</option>
+                        <option value="5">5+ Guests (Multi-room)</option>
                       </select>
                     </div>
                   </div>
 
+                  {/* Individual Room Selection */}
+                  <div className="form-group" style={{ marginTop: '10px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <label style={{ margin: 0 }}>
+                        Select Individual Room(s) *
+                        {roomsLoading && <span style={{ fontSize: '0.75rem', fontWeight: 400, marginLeft: '0.5rem', opacity: 0.6 }}>Loading live rooms…</span>}
+                      </label>
+                      <span className="selected-rooms-count-pill">
+                        {selectedRooms.length} {selectedRooms.length === 1 ? 'Room Selected' : 'Rooms Selected'}
+                      </span>
+                    </div>
+                    <p style={{ fontSize: '0.82rem', color: '#6B5A43', margin: '0 0 12px 0' }}>
+                      Click on any available room to select or add it to your reservation. You may book one, two, or multiple rooms as needed.
+                    </p>
+
+                    {floors.map(floorGrp => (
+                      <div key={floorGrp.floorNum} className="floor-section-block">
+                        <div className="floor-title">
+                          <span>{floorGrp.label}</span>
+                          <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#8E7C67' }}>
+                            {floorGrp.rooms.filter(r => !bookedRoomIds.has(r.id)).length} of {floorGrp.rooms.length} available
+                          </span>
+                        </div>
+                        <div className="individual-rooms-grid">
+                          {floorGrp.rooms.map(room => {
+                            const isBooked = bookedRoomIds.has(room.id);
+                            const isSelected = selectedRoomIds.includes(room.id);
+                            return (
+                              <div
+                                key={room.id}
+                                className={`individual-room-card ${isSelected ? 'selected' : ''} ${isBooked ? 'disabled' : ''}`}
+                                onClick={() => toggleRoomSelection(room.id)}
+                              >
+                                <div className="room-card-header">
+                                  <span className="room-number-badge">Room {room.room_number}</span>
+                                  <div className="room-select-checkbox">
+                                    {isSelected && <Check size={14} strokeWidth={3} />}
+                                  </div>
+                                </div>
+                                <span className="room-type-tag">{room.categoryName}</span>
+                                <span className="room-rate-tag">₹{room.price_per_night.toLocaleString()} <small style={{ fontWeight: 400, fontSize: '0.75rem', color: '#6B5A43' }}>/ night</small></span>
+                                <span className={`room-status-badge ${isBooked ? 'booked' : 'available'}`}>
+                                  {isBooked ? 'Unavailable (Booked)' : isSelected ? '✓ Selected' : 'Available'}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
                   {/* Guest Information */}
-                  <div className="form-row-2">
+                  <div className="form-row-2" style={{ marginTop: '16px' }}>
                     <div className="form-group">
                       <label>Guest Full Name *</label>
                       <input 
@@ -204,8 +440,8 @@ export default function BookingPage() {
                     />
                   </div>
 
-                  <button type="submit" className="btn-primary w-100 submit-booking-btn" disabled={isSubmitting}>
-                    <span>{isSubmitting ? 'Processing Booking Request…' : 'Submit Booking Request'}</span>
+                  <button type="submit" className="btn-primary w-100 submit-booking-btn" disabled={isSubmitting || selectedRooms.length === 0}>
+                    <span>{isSubmitting ? 'Processing Booking Request…' : `Submit Booking Request (${selectedRooms.length} ${selectedRooms.length === 1 ? 'Room' : 'Rooms'})`}</span>
                     <ArrowRight size={16} />
                   </button>
                 </form>
@@ -215,18 +451,29 @@ export default function BookingPage() {
               <aside className="booking-summary-sidebar">
                 <div className="summary-card glass-card sticky-sidebar">
                   <h3>Reservation Summary</h3>
-                  <div className="summary-room-preview">
-                    <img src={selectedRoom.image} alt={selectedRoom.name} />
-                    <div>
-                      <h4>{selectedRoom.name}</h4>
-                      <span>{selectedRoom.bedType}</span>
-                    </div>
+                  
+                  {/* Selected Rooms List */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
+                    {selectedRooms.map((r) => (
+                      <div key={r.id} className="summary-room-preview">
+                        <img src={r.image} alt={`Room ${r.room_number}`} />
+                        <div style={{ flex: 1 }}>
+                          <h4 style={{ margin: '0 0 2px 0' }}>Room {r.room_number}</h4>
+                          <span style={{ display: 'block', fontSize: '0.8rem', color: '#D4C7B8' }}>{r.categoryName} • {r.bedType}</span>
+                          <span style={{ fontSize: '0.85rem', color: '#E2B25E', fontWeight: 600 }}>₹{r.price_per_night.toLocaleString()} / night</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
 
                   <div className="summary-breakdown">
                     <div className="breakdown-row">
-                      <span>Rate Per Night</span>
-                      <span>₹{(selectedRoom.pricePerNight || selectedRoom.price).toLocaleString()}</span>
+                      <span>Selected Rooms</span>
+                      <span>{selectedRooms.map(r => `Rm ${r.room_number}`).join(', ')} ({selectedRooms.length})</span>
+                    </div>
+                    <div className="breakdown-row">
+                      <span>Rate Per Night (Total)</span>
+                      <span>₹{nightlyRateTotal.toLocaleString()}</span>
                     </div>
                     <div className="breakdown-row">
                       <span>Duration</span>
@@ -274,8 +521,8 @@ export default function BookingPage() {
               
               <div className="confirmed-details-card">
                 <div className="confirmed-row">
-                  <span>Room Type:</span>
-                  <strong>{bookingConfirmed.roomName}</strong>
+                  <span>Selected Rooms:</span>
+                  <strong>{bookingConfirmed.roomNames}</strong>
                 </div>
                 <div className="confirmed-row">
                   <span>Check-in:</span>
@@ -313,3 +560,4 @@ export default function BookingPage() {
     </div>
   );
 }
+

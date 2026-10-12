@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import heroArtworkImg from '../../images/WhatsApp Image 2026-10-07 at 12.45.05 PM (1).jpeg';
 import './HeroSlider.css';
 
 const HEADLINES = [
@@ -63,30 +64,19 @@ export default function HeroSlider({ onOpenBooking }) {
 
   return (
     <section className="bengali-hero full-width-hero" aria-label="Hero Section">
-      {/* FULL-WIDTH ORIGINAL YELLOW BENGALI ARTWORK BACKGROUND */}
-      <div className="hero-full-bg" aria-hidden="true">
+      {/* FULL BENGALI ARTWORK BACKGROUND */}
+      <div className="hero-bg-wrapper" aria-hidden="true">
         <img
-          src="/images/art6.jpg"
+          src={heroArtworkImg}
           alt=""
-          className="hero-bg-image"
-          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+          className="hero-full-bg-image"
         />
-      </div>
-
-      {/* Warm cream-to-amber translucent scrim overlay to ensure 100% text readability */}
-      <div className="hero-overlay-scrim" aria-hidden="true" />
-
-      {/* Bottom decorative folk art strip */}
-      <div className="hero-bottom-art-strip" aria-hidden="true">
-        <img
-          src="/images/art3.jpg"
-          alt=""
-          onError={(e) => { e.currentTarget.style.display = 'none'; }}
-        />
+        {/* Subtle, soft translucent scrim overlay over the left text area to maximize readability without obscuring the artwork */}
+        <div className="hero-text-readability-overlay" />
       </div>
 
       <div className="hero-container">
-        {/* ====== LEFT SIDE: Hero Content ====== */}
+        {/* ====== HERO CONTENT (OVERLAY ON TOP OF BACKGROUND) ====== */}
         <div className="hero-content">
           <span className="hero-eyebrow">AMONTRON LODGE &amp; RESTAURANT</span>
 

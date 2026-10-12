@@ -4,7 +4,7 @@
 }
 
 .bengali-rooms-section {
-  padding: 56px 0 48px;
+  padding: 44px 0 28px;
 }
 
 .section-header-compact {
@@ -103,27 +103,14 @@
   margin-top: auto;
 }
 
-/* Decorative folk art divider */
+/* Decorative folk art divider - removed unwanted red horizontal strip */
 .bengali-folk-divider {
-  width: 100%;
-  height: 28px;
-  background-color: var(--accent-terracotta);
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-}
-
-.bengali-folk-divider img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  mix-blend-mode: screen;
-  opacity: 0.55;
+  display: none;
 }
 
 /* Restaurant Showcase */
 .bengali-restaurant-section {
-  padding: 56px 0 48px;
+  padding: 36px 0 44px;
   background-color: var(--bg-surface);
 }
 

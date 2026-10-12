@@ -33,80 +33,64 @@
   pointer-events: none;
 }
 
-/* ====== FULL-WIDTH YELLOW BENGALI ARTWORK BACKGROUND ====== */
-.hero-full-bg {
+/* ====== FULL-WIDTH BENGALI ARTWORK BACKGROUND ====== */
+.hero-bg-wrapper {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  top: 68px; /* Start exactly below the fixed navbar — prevents faces being hidden behind it */
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 1;
   overflow: hidden;
+  background-color: #E8961A; /* Mustard/golden tone matching the artwork background */
 }
 
-.hero-bg-image {
+.hero-full-bg-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center right;
-  filter: brightness(0.96) contrast(1.05);
+  object-position: right top; /* Image top = navbar bottom — shows complete faces */
+  filter: brightness(0.97) contrast(1.03);
+  display: block;
 }
 
-/* Warm cream/amber translucent gradient overlay — ensures high text contrast on left while keeping Bengali artwork visible */
-.hero-overlay-scrim {
+/* Soft, subtle translucent cream gradient over the left side to keep text effortlessly readable without hiding the artwork */
+.hero-text-readability-overlay {
   position: absolute;
   inset: 0;
   z-index: 2;
   background: linear-gradient(
     90deg,
-    rgba(250, 246, 237, 0.96) 0%,
-    rgba(250, 246, 237, 0.90) 42%,
-    rgba(250, 246, 237, 0.65) 62%,
-    rgba(250, 246, 237, 0.25) 85%,
-    rgba(250, 246, 237, 0.08) 100%
+    rgba(250, 246, 237, 0.94) 0%,
+    rgba(250, 246, 237, 0.88) 32%,
+    rgba(250, 246, 237, 0.65) 52%,
+    rgba(250, 246, 237, 0.25) 75%,
+    rgba(250, 246, 237, 0.04) 100%
   );
   pointer-events: none;
 }
 
-/* Bottom decorative folk art strip */
-.hero-bottom-art-strip {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 18px;
-  overflow: hidden;
-  z-index: 3;
-  opacity: 0.75;
-  pointer-events: none;
-}
-
-.hero-bottom-art-strip img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-
 .hero-container {
   position: relative;
-  z-index: 3;
+  z-index: 5;
   flex: 1;
   max-width: 1280px;
   margin: 0 auto;
   width: 100%;
-  padding: 40px 48px 50px;
+  padding: 50px 48px 65px;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
 }
 
-/* ====== LEFT: HERO CONTENT ====== */
-
+/* ====== HERO CONTENT OVERLAY ====== */
 .hero-content {
-  max-width: 620px;
+  flex: 1;
+  max-width: 640px;
   opacity: 0;
   transform: translateY(20px);
   animation: heroFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+  z-index: 6;
 }
 
 .hero-eyebrow {
@@ -288,17 +272,26 @@
     min-height: auto;
   }
 
-  /* Hide the art panel on small screens — content takes full width */
-  .hero-art-panel {
-    display: none;
+  .hero-bg-wrapper {
+    top: 64px; /* Mobile navbar is 64px tall */
   }
 
   .hero-container {
-    padding: 30px 20px 40px;
+    padding: 32px 20px 52px;
+  }
+
+  .hero-text-readability-overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(250, 246, 237, 0.94) 0%,
+      rgba(250, 246, 237, 0.90) 60%,
+      rgba(250, 246, 237, 0.75) 100%
+    );
   }
 
   .hero-content {
     max-width: 100%;
+    text-align: left;
   }
 
   .hero-headline-container {

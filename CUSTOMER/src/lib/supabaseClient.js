@@ -64,6 +64,7 @@ export async function submitBookingRequest(bookingData) {
     // 1. Create Customer
     const guestPhone = (bookingData.guest_phone || bookingData.phone || '').trim();
     const guestName = (bookingData.guest_name || bookingData.name || '').trim();
+    const guestEmail = (bookingData.guest_email || bookingData.email || '').trim();
     const guestCount = parseInt(bookingData.guests_count || bookingData.guests || bookingData.adults || 1, 10);
 
     customerId = crypto.randomUUID(); // Securely generate UUID
@@ -75,6 +76,7 @@ export async function submitBookingRequest(bookingData) {
           id: customerId, 
           full_name: guestName || 'Guest', 
           phone: guestPhone,
+          email: guestEmail || null,
           customer_type: 'room_guest',
           number_of_guests: guestCount
         }]);
@@ -84,36 +86,88 @@ export async function submitBookingRequest(bookingData) {
       }
     }
 
-    // 2. Create Booking matching schema
-    const bookingNumber = 'req_' + Math.random().toString(36).substring(2, 9);
-    const nights = Math.max(1, parseInt(bookingData.nights || 1, 10));
-    const totalPrice = Number(bookingData.total_price) || 0;
-    const ratePerNight = nights > 0 ? (totalPrice / nights) : totalPrice;
-    
-    const sanitizedRequest = {
-      booking_number: bookingNumber,
-      customer_id: customerId,
-      room_id: bookingData.room_uuid || null,
-      check_in: bookingData.check_in,
-      check_out: bookingData.check_out,
-      number_of_nights: nights,
-      number_of_guests: guestCount,
-      room_rate: ratePerNight,
-      room_total: totalPrice,
-      booking_status: 'pending',
-      created_by: null
-    };
-
-    const { data, error } = await supabase
-      .from('bookings')
-      .insert([sanitizedRequest])
-      .select()
-      .single();
-
-    if (error) {
-      return { success: false, error: 'Booking insertion failed: ' + error.message };
+    // 2. Calculate nights
+    let nights = Math.max(1, parseInt(bookingData.nights || 1, 10));
+    if (bookingData.check_in && bookingData.check_out) {
+      const d1 = new Date(bookingData.check_in);
+      const d2 = new Date(bookingData.check_out);
+      const diffDays = Math.round((d2 - d1) / (1000 * 60 * 60 * 24));
+      if (diffDays > 0) nights = diffDays;
     }
-    return { success: true, data, source: 'supabase' };
+
+    // Determine rooms to book (array of rooms or single room)
+    const roomsToBook = Array.isArray(bookingData.rooms) && bookingData.rooms.length > 0
+      ? bookingData.rooms
+      : [{
+          room_id: bookingData.room_uuid || bookingData.room_id || null,
+          room_number: bookingData.room_number || '',
+          room_rate: Number(bookingData.room_rate) || (nights > 0 ? Number(bookingData.total_price || 0) / nights : Number(bookingData.total_price || 0)),
+          price_per_night: Number(bookingData.room_rate) || (nights > 0 ? Number(bookingData.total_price || 0) / nights : Number(bookingData.total_price || 0))
+        }];
+
+    // 3. Overlap check for all specified physical rooms
+    const physicalRoomIds = roomsToBook.map(r => r.room_id || r.id).filter(Boolean);
+    if (physicalRoomIds.length > 0) {
+      const { data: conflicts, error: conflictErr } = await supabase
+        .from('bookings')
+        .select('id, room_id, check_in, check_out, booking_status')
+        .in('room_id', physicalRoomIds)
+        .not('booking_status', 'in', '("cancelled","checked_out")')
+        .lt('check_in', bookingData.check_out)
+        .gt('check_out', bookingData.check_in);
+
+      if (conflictErr) {
+        console.warn('Conflict check query error:', conflictErr);
+      } else if (conflicts && conflicts.length > 0) {
+        return { 
+          success: false, 
+          error: 'One or more of the selected rooms are already booked for the selected dates. Please choose different rooms.' 
+        };
+      }
+    }
+
+    // 4. Create Booking records
+    const masterReference = 'AMN-' + Math.floor(10000 + Math.random() * 90000);
+    const bookingRows = [];
+
+    roomsToBook.forEach((roomItem, idx) => {
+      const roomFkId = roomItem.room_id || roomItem.id || null;
+      const roomRate = Number(roomItem.price_per_night || roomItem.price || roomItem.room_rate || 0);
+      const roomTotal = roomRate * nights;
+      const bkgNumber = roomsToBook.length > 1
+        ? `${masterReference}-${idx + 1}`
+        : 'req_' + Math.random().toString(36).substring(2, 9);
+
+      bookingRows.push({
+        booking_number: bkgNumber,
+        customer_id: customerId,
+        room_id: roomFkId,
+        check_in: bookingData.check_in,
+        check_out: bookingData.check_out,
+        number_of_nights: nights,
+        number_of_guests: Math.max(1, Math.ceil(guestCount / roomsToBook.length)),
+        room_rate: roomRate,
+        room_total: roomTotal,
+        booking_status: 'pending',
+        created_by: null
+      });
+    });
+
+    const { data: insertedData, error: bookingErr } = await supabase
+      .from('bookings')
+      .insert(bookingRows)
+      .select();
+
+    if (bookingErr) {
+      return { success: false, error: 'Booking insertion failed: ' + bookingErr.message };
+    }
+
+    return { 
+      success: true, 
+      data: insertedData && insertedData.length === 1 ? insertedData[0] : insertedData,
+      reference_no: masterReference,
+      source: 'supabase' 
+    };
   }
 
   return { success: false, error: 'Supabase is not configured' };

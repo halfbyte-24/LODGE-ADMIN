@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldCheck, Award, Heart, ArrowRight } from 'lucide-react';
-import bengaliCoupleImg from '../../images/WhatsApp Image 2026-10-07 at 12.45.05 PM (1).jpeg';
+import bengaliCoupleImg from '../../images/WhatsApp Image 2026-10-07 at 12.45.03 PM (1).jpeg';
 import './AboutPage.css';
 
 export default function AboutPage({ onOpenBooking }) {

@@ -8,31 +8,10 @@ export default function WelcomeIntro() {
     <section className="bengali-about-preview">
       {/* Background paper texture & alpana */}
       <div className="about-bg-texture"></div>
-      <img 
-        src="/images/art7.jpg" 
-        className="about-bg-alpana" 
-        alt="" 
-        onError={(e) => { e.currentTarget.style.display = 'none'; }}
-      />
       
       <div className="section-wrapper">
         <div className="about-editorial-layout">
           
-          {/* Left: Bengali folk-art illustration */}
-          <div className="about-left-art">
-            <img 
-              src="/images/art5.jpg" 
-              className="about-art-dancer" 
-              alt="Bengali Folk Art Illustration" 
-              onError={(e) => { e.currentTarget.src = '/images/art1.jpg'; }}
-            />
-            <img 
-              src="/images/art2.jpg" 
-              className="about-art-instrument" 
-              alt="Traditional Bengali Motif" 
-              onError={(e) => { e.currentTarget.style.display = 'none'; }}
-            />
-          </div>
 
           {/* Center: Content */}
           <div className="about-center-content">

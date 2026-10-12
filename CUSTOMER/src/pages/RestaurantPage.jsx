@@ -37,7 +37,8 @@ export default function RestaurantPage({ onOpenBooking }) {
     }))
   );
   const [categories, setCategories] = useState(DEFAULT_RESTAURANT_CATEGORIES);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [menuError, setMenuError] = useState(null);
   
   const [reserved, setReserved] = useState(false);
   const [guestName, setGuestName] = useState('');
@@ -46,23 +47,54 @@ export default function RestaurantPage({ onOpenBooking }) {
 
   useEffect(() => {
     async function fetchMenu() {
+      setLoading(true);
+      setMenuError(null);
       try {
-        const { data, error } = await supabase.from('menu_items').select('*');
-        if (!error && data && data.length > 0) {
-          const mapped = data.map(item => ({
-            ...item,
-            normalizedCategory: mapMenuItemCategory(item.category)
-          }));
+        // Join menu_categories to get category name & type; only show available items
+        const { data, error } = await supabase
+          .from('menu_items')
+          .select('*, menu_categories(id, name, type)')
+          .eq('is_available', true)
+          .order('name', { ascending: true });
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          const mapped = data.map(item => {
+            const catName = item.menu_categories?.name || item.category_name || item.category || '';
+            return {
+              ...item,
+              // Normalise field names so template works with both local & Supabase data
+              isVeg: item.is_veg,
+              available: item.is_available,
+              category_name: catName,
+              normalizedCategory: mapMenuItemCategory(catName)
+            };
+          });
           setMenuItems(mapped);
+
+          // Build dynamic category list from actual DB data
+          const dbCats = [...new Set(mapped.map(m => m.normalizedCategory))].filter(Boolean);
+          const merged = ['All', ...DEFAULT_RESTAURANT_CATEGORIES.slice(1).filter(c => dbCats.includes(c)), ...dbCats.filter(c => !DEFAULT_RESTAURANT_CATEGORIES.includes(c))];
+          setCategories([...new Set(merged)]);
+        } else {
+          // Supabase returned 0 available items — keep hardcoded fallback
+          setMenuItems(MENU_ITEMS.map(item => ({ ...item, normalizedCategory: mapMenuItemCategory(item.category) })));
         }
       } catch (err) {
-        // Fallback already initialized with normalized categories
+        console.warn('RestaurantPage: Supabase fetch error, using local fallback:', err.message);
+        setMenuError('Could not load live menu. Showing saved menu data.');
+        // Fallback already initialized in state
+      } finally {
+        setLoading(false);
       }
     }
     fetchMenu();
   }, []);
 
+  // Only show available items; filter by selected category
   const filteredItems = (Array.isArray(menuItems) ? menuItems : []).filter(item => {
+    if (item.available === false || item.is_available === false) return false;
     if (selectedCategory === 'All') return true;
     const cat = item.normalizedCategory || item.category;
     return cat?.toLowerCase() === selectedCategory.toLowerCase();
@@ -126,6 +158,13 @@ export default function RestaurantPage({ onOpenBooking }) {
         <img src="/images/art3.jpg" className="menu-decor right-decor" alt="Alpana Motif" />
         
         <div className="section-wrapper relative z-2">
+          {/* Error banner shown when Supabase fetch failed (local fallback still renders) */}
+          {menuError && (
+            <div style={{ background: '#fef3c7', border: '1px solid #f59e0b', borderRadius: '8px', padding: '0.75rem 1rem', marginBottom: '1.5rem', fontSize: '0.875rem', color: '#92400e' }}>
+              ⚠️ {menuError}
+            </div>
+          )}
+
           <div className="bengali-category-pills" style={{marginBottom: '60px'}}>
             {categories.map((cat) => (
               <button
@@ -139,7 +178,15 @@ export default function RestaurantPage({ onOpenBooking }) {
           </div>
 
           {loading ? (
-            <div className="text-center py-10">Loading menu...</div>
+            <div className="text-center py-10" style={{ padding: '3rem 0', opacity: 0.7 }}>
+              <UtensilsCrossed size={32} style={{ margin: '0 auto 0.75rem auto', display: 'block', opacity: 0.5 }} />
+              Loading menu from kitchen…
+            </div>
+          ) : filteredItems.length === 0 ? (
+            <div className="text-center py-10" style={{ padding: '3rem 0', opacity: 0.7 }}>
+              <UtensilsCrossed size={40} style={{ margin: '0 auto 1rem auto', display: 'block', opacity: 0.35 }} />
+              <p>No items currently available in this category.</p>
+            </div>
           ) : (
             <div className="editorial-menu-grid">
               {filteredItems.map((item) => (
@@ -148,20 +195,17 @@ export default function RestaurantPage({ onOpenBooking }) {
                     <div className="menu-item-header">
                       <h3 className="item-name">
                         {item.name}
-                        {item.isVeg !== undefined && (
-                          <span className={`diet-dot ${item.isVeg ? 'veg' : 'non-veg'}`}></span>
+                        {/* Support both local (isVeg) and Supabase (is_veg) field names */}
+                        {(item.isVeg !== undefined || item.is_veg !== undefined) && (
+                          <span className={`diet-dot ${(item.isVeg ?? item.is_veg) ? 'veg' : 'non-veg'}`}></span>
                         )}
                       </h3>
                       <div className="menu-item-dots"></div>
-                      {item.available === false ? (
-                        <span className="item-unavailable-badge">Currently Unavailable</span>
-                      ) : (
-                        <span className="item-price">₹{item.price}</span>
-                      )}
+                      <span className="item-price">₹{Number(item.price).toFixed(0)}</span>
                     </div>
                     <p className="item-desc">{item.description}</p>
                   </div>
-                  {item.image && (
+                  {(item.image || item.image_url) && (
                     <div className="menu-item-thumb">
                       <img src={item.image_url || item.image} alt={item.name} loading="lazy" />
                     </div>

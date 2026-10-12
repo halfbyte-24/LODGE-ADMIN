@@ -98,20 +98,35 @@
   background: transparent;
   padding: 0;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   box-shadow: none;
   width: 100%;
-  max-width: 440px;
+  max-width: 400px;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.editorial-image-frame:hover {
+  transform: translateY(-5px) scale(1.025);
+  box-shadow: 0 16px 36px rgba(37, 32, 25, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editorial-image-frame {
+    transition: none;
+  }
+  .editorial-image-frame:hover {
+    transform: none;
+  }
 }
 
 .editorial-image-frame img {
   width: 100%;
   height: auto;
-  max-height: 480px;
+  max-height: 440px;
   object-fit: contain;
   object-position: center;
   display: block;
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
 .main-art-frame {

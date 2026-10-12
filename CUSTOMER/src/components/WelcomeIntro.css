@@ -14,29 +14,23 @@
 }
 
 .about-bg-alpana {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 900px;
-  opacity: 0.04;
-  mix-blend-mode: multiply;
-  pointer-events: none;
-  z-index: 0;
+  display: none;
 }
 
 .about-editorial-layout {
   display: grid;
-  grid-template-columns: auto 1.2fr 1fr;
-  gap: 48px;
+  grid-template-columns: 1.22fr 1fr;
+  gap: 52px;
   align-items: center;
   position: relative;
   z-index: 2;
 }
 
 /* Left Clean Professional Text Column */
-.about-text-column {
-  padding: 10px 0;
+.about-text-column,
+.about-center-content {
+  padding: 8px 0;
+  border: none;
 }
 
 .about-clean-heading {
@@ -56,30 +50,60 @@
   margin-bottom: 20px;
 }
 
-.about-body-text {
+.about-body-text,
+.about-description {
   font-size: 1rem;
   line-height: 1.8;
   color: var(--text-secondary);
-  margin-bottom: 18px;
+  margin-bottom: 24px;
 }
 
-/* Right Composition: Bengali Bride & Groom Illustration + Info Panel */
+.about-cta-link {
+  display: inline-flex;
+  align-items: center;
+  color: var(--accent-terracotta, #B52222);
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.about-cta-link:hover {
+  color: #8F1717;
+  transform: translateX(3px);
+}
+
+.cta-arrow {
+  margin-left: 8px;
+  transition: transform 0.3s ease;
+}
+
+.about-cta-link:hover .cta-arrow {
+  transform: translateX(4px);
+}
+
+/* Right Composition: Hotel Room Visual + Info Panel */
 .about-right-composition {
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: flex-end;
+  border: none;
 }
 
 .about-hotel-image-wrapper {
   position: relative;
   width: 100%;
-  aspect-ratio: 4/5;
+  max-width: 420px;
+  aspect-ratio: 4/3.2;
   background: white;
-  padding: 8px;
+  padding: 6px;
   border: 1px solid var(--border-subtle);
   box-shadow: 0 4px 20px rgba(37,32,25,0.08);
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
 }
 
@@ -131,30 +155,6 @@
   flex-shrink: 0;
 }
 
-/* Left art column: Bengali folk illustrations */
-.about-left-art {
-  position: relative;
-  width: 160px;
-  flex-shrink: 0;
-}
-
-.about-art-dancer {
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: contain;
-}
-
-.about-art-instrument {
-  width: 70%;
-  height: auto;
-  display: block;
-  margin-top: 16px;
-  margin-left: auto;
-  object-fit: contain;
-  opacity: 0.8;
-}
-
 /* Center text column */
 .about-center-content {
   padding: 8px 0;
@@ -164,10 +164,6 @@
   .about-editorial-layout {
     grid-template-columns: 1fr 1fr;
     gap: 40px;
-  }
-  /* Hide the left decorative art column on tablet/mobile */
-  .about-left-art {
-    display: none;
   }
   .about-right-composition {
     max-width: 100%;
