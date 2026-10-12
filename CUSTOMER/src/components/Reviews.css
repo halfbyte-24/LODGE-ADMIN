@@ -1,0 +1,128 @@
+/* Reviews Section Styles */
+.reviews-section {
+  position: relative;
+  background-color: var(--bg-main);
+  border-bottom: 1px solid var(--border-subtle);
+  overflow: hidden;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-bottom: 60px;
+}
+
+.review-card {
+  padding: 38px 32px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.review-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.quote-icon {
+  opacity: 0.6;
+}
+
+.stars-row {
+  display: flex;
+  gap: 3px;
+}
+
+.review-quote-text {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  line-height: 1.65;
+  color: var(--text-primary);
+  margin-bottom: 28px;
+  flex: 1;
+}
+
+.review-author-meta {
+  padding-top: 18px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+}
+
+.author-name {
+  font-size: 0.95rem;
+  color: #ffffff;
+}
+
+.author-title {
+  font-size: 0.8rem;
+  color: var(--gold-light);
+  margin-top: 2px;
+}
+
+.author-pub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+
+/* Accreditations Banner */
+.accreditations-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 30px 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border-gold);
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.accred-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.accred-star {
+  color: var(--gold-light);
+  letter-spacing: 0.2em;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+
+.accred-key {
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.accred-item strong {
+  font-size: 0.92rem;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+}
+
+.accred-item small {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.accred-divider {
+  width: 1px;
+  height: 48px;
+  background-color: var(--border-subtle);
+}
+
+@media (max-width: 1024px) {
+  .reviews-grid {
+    grid-template-columns: 1fr;
+  }
+  .accred-divider {
+    display: none;
+  }
+}

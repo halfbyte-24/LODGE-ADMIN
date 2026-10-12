@@ -1,0 +1,108 @@
+/* Editorial Facilities Page Styles */
+
+.editorial-facilities-section {
+  padding: 100px 0;
+  background-color: var(--bg-surface);
+  position: relative;
+}
+
+.editorial-facilities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 40px;
+}
+
+.editorial-facility-card {
+  position: relative;
+  background: white;
+  border: 1px solid rgba(203, 163, 88, 0.3); /* Subtle gold border */
+  padding: 40px 30px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+}
+
+.editorial-facility-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-terracotta);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.facility-icon-wrap {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  border: 1px solid var(--border-medium);
+  border-radius: 50%;
+  background: var(--bg-surface);
+}
+
+.facility-decor {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 40px;
+  opacity: 0.2;
+  mix-blend-mode: multiply;
+  transform: rotate(45deg);
+}
+
+.facility-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.facility-detail {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+.facility-number {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem;
+  color: var(--accent-gold);
+  opacity: 0.15;
+  font-weight: 700;
+}
+
+/* CTA Banner Editorial Style */
+.editorial-cta-banner {
+  padding: 100px 0;
+  position: relative;
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-subtle);
+  overflow: hidden;
+}
+
+.cta-bg-art {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  opacity: 0.08;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.cta-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(253,24bf,237,0.9), rgba(253,24bf,237,0.8));
+  z-index: 1;
+}
+
+.ml-2 {
+  margin-left: 8px;
+}

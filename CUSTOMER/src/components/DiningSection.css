@@ -1,0 +1,180 @@
+.bengali-dining-preview {
+  background-color: var(--bg-surface);
+  position: relative;
+  padding: 80px 0;
+  overflow: hidden;
+}
+
+.dining-header {
+  text-align: center;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 2;
+}
+
+.dining-description {
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+.dining-decoration {
+  position: absolute;
+  opacity: 0.12;
+  mix-blend-mode: multiply;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.left-deco {
+  top: 10%;
+  left: -50px;
+  width: 200px;
+}
+
+.right-deco {
+  bottom: 10%;
+  right: -50px;
+  width: 200px;
+}
+
+.dining-decoration img {
+  width: 100%;
+}
+
+.menu-category-pills {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 2;
+}
+
+.menu-pill-btn {
+  background: transparent;
+  border: 1px solid var(--border-medium);
+  padding: 8px 24px;
+  border-radius: 40px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.menu-pill-btn.pill-btn-active, .menu-pill-btn:hover {
+  background-color: var(--accent-terracotta);
+  color: white;
+  border-color: var(--accent-terracotta);
+}
+
+.bengali-food-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 50px;
+}
+
+.bengali-food-card {
+  background: white;
+  border: 1px solid var(--border-subtle);
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease;
+}
+
+.bengali-food-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.food-card-media {
+  position: relative;
+  height: 220px;
+}
+
+.food-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.diet-indicator {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 24px;
+  height: 24px;
+  background: white;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.diet-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.diet-veg .diet-dot { background-color: var(--badge-veg); }
+.diet-nonveg .diet-dot { background-color: var(--badge-nonveg); }
+
+.food-card-details {
+  padding: 24px;
+}
+
+.food-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.food-name {
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.food-price {
+  font-weight: 600;
+  color: var(--accent-terracotta);
+}
+
+.food-desc {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.food-cat-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-gold);
+  border: 1px solid var(--accent-gold-soft);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.dining-footer-cta {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 768px) {
+  .left-deco, .right-deco {
+    display: none;
+  }
+}

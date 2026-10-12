@@ -1,0 +1,423 @@
+/* ================================================================
+   BENGALI HERO — AMONTRON HOTEL & RESTAURANT
+   Full-width yellow folk-art background · Left English text overlay
+   ================================================================ */
+
+.bengali-hero.full-width-hero {
+  position: relative;
+  min-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #E8B837; /* Warm mustard background fallback */
+  overflow: hidden;
+  padding-top: 80px; /* account for fixed navbar */
+}
+
+/* Full-width background image container */
+.hero-full-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center right;
+  display: block;
+}
+
+/* Subtle cream translucent gradient scrim over LEFT text area only */
+.hero-overlay-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(247, 233, 201, 0.94) 0%,
+    rgba(247, 233, 201, 0.88) 38%,
+    rgba(247, 233, 201, 0.65) 55%,
+    rgba(247, 233, 201, 0.15) 75%,
+    transparent 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Subtle alpona decorative watermark behind left text */
+.hero-alpona-watermark {
+  position: absolute;
+  top: -20px;
+  left: -40px;
+  width: 420px;
+  height: 420px;
+  background-image: url('/images/art7.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.08;
+  transform: rotate(-10deg);
+  pointer-events: none;
+  z-index: 2;
+  filter: sepia(1) saturate(0.2) brightness(0.65);
+  mix-blend-mode: multiply;
+  border-radius: 8px;
+}
+
+/* ====== LAYOUT ====== */
+
+.hero-container {
+  position: relative;
+  z-index: 3;
+  flex: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 60px 48px;
+  display: flex;
+  align-items: center;
+}
+
+/* ====== LEFT: ENGLISH CONTENT ====== */
+
+.hero-content {
+  max-width: 580px;
+  opacity: 0;
+  transform: translateY(24px);
+  animation: heroFadeUp 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+}
+
+.hero-eyebrow {
+  display: inline-block;
+  font-size: 0.76rem;
+  letter-spacing: 0.22em;
+  color: #8c630d;
+  margin-bottom: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-bottom: 2px solid #8c630d;
+  padding-bottom: 4px;
+}
+
+/* MAIN HEADLINE CONTAINER — reserved vertical space to prevent layout jump */
+.hero-headline-container {
+  min-height: 160px;
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.hero-headline-animated {
+  font-size: clamp(2.6rem, 4.8vw, 4.3rem);
+  line-height: 1.15;
+  font-weight: 700;
+  color: #252019;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-align: left;
+}
+
+.typed-headline-text.en-font {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.typed-headline-text.bn-font {
+  font-family: 'Noto Serif Bengali', Georgia, serif;
+  font-size: clamp(2.4rem, 4.4vw, 4rem);
+  line-height: 1.25;
+}
+
+.hero-headline-accent {
+  color: #9B1C1C; /* Maroon */
+  font-style: normal;
+}
+
+.hero-headline-dark {
+  color: #1F4D2E; /* Forest green */
+}
+
+/* Subtle blinking typing cursor */
+.hero-cursor {
+  display: inline-block;
+  margin-left: 4px;
+  color: #9B1C1C;
+  font-weight: 300;
+  font-family: monospace;
+  animation: cursorBlink 0.8s infinite ease-in-out;
+  user-select: none;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.hero-description {
+  font-size: 1.08rem;
+  color: #3d3428;
+  max-width: 500px;
+  margin-bottom: 34px;
+  line-height: 1.75;
+  font-weight: 450;
+}
+
+/* CTA Buttons */
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.btn-hero-primary {
+  background-color: #9B1C1C;
+  color: white;
+  padding: 14px 32px;
+  border: 2px solid #9B1C1C;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-hero-primary:hover {
+  background-color: transparent;
+  color: #9B1C1C;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(155, 28, 28, 0.25);
+}
+
+.btn-hero-outline {
+  border: 2px solid #252019;
+  color: #252019;
+  padding: 14px 32px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Outfit', sans-serif;
+}
+
+.btn-hero-outline:hover {
+  background-color: #252019;
+  color: #FAF6ED;
+  transform: translateY(-2px);
+}
+
+/* Trust strip below buttons */
+.hero-trust-strip {
+  display: flex;
+  gap: 24px;
+  font-size: 0.85rem;
+  color: #554a3b;
+  font-weight: 600;
+  flex-wrap: wrap;
+}
+
+.hero-trust-strip span {
+  color: #3d3428;
+  letter-spacing: 0.03em;
+}
+
+/* ====== BOTTOM DECORATIVE WARLI STRIP ====== */
+
+.hero-bottom-art-strip {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  height: 52px;
+  overflow: hidden;
+  background-color: var(--bg-surface, #F4E4C3);
+  border-top: 1.5px solid var(--border-subtle);
+}
+
+.hero-bottom-art-strip img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.65;
+  mix-blend-mode: multiply;
+  filter: sepia(0.3);
+}
+
+/* ====== ANIMATIONS ====== */
+
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ====== BOTTOM DECORATIVE WARLI STRIP ====== */
+
+.hero-bottom-art-strip {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  height: 72px;
+  overflow: hidden;
+  background-color: var(--bg-surface);
+  border-top: 1.5px solid var(--border-subtle);
+}
+
+.hero-bottom-art-strip img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.65;
+  mix-blend-mode: multiply;
+  filter: sepia(0.3);
+}
+
+/* ====== ANIMATIONS ====== */
+
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ====== BUTTONS (global, reused) ====== */
+
+.btn-terracotta {
+  background-color: #9B1C1C;
+  color: white;
+  padding: 14px 30px;
+  border: 2px solid #9B1C1C;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-terracotta:hover {
+  background-color: transparent;
+  color: #9B1C1C;
+}
+
+.btn-outline-gold {
+  border: 2px solid var(--accent-gold);
+  color: var(--accent-gold);
+  padding: 14px 30px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  background: transparent;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.btn-outline-gold:hover {
+  background-color: var(--accent-gold);
+  color: white;
+}
+
+/* ====== RESPONSIVE ====== */
+
+@media (max-width: 1024px) {
+  .hero-container {
+    padding: 48px 36px;
+  }
+  .hero-content {
+    max-width: 520px;
+  }
+}
+
+@media (max-width: 768px) {
+  .bengali-hero.full-width-hero {
+    padding-top: 76px;
+    min-height: auto;
+  }
+
+  .hero-bg-image {
+    object-position: 70% center;
+  }
+
+  .hero-overlay-scrim {
+    background: linear-gradient(
+      180deg,
+      rgba(247, 233, 201, 0.95) 0%,
+      rgba(247, 233, 201, 0.92) 55%,
+      rgba(247, 233, 201, 0.8) 100%
+    );
+  }
+
+  .hero-container {
+    padding: 36px 20px 48px;
+  }
+
+  .hero-content {
+    max-width: 100%;
+  }
+
+  .hero-headline-container {
+    min-height: 140px;
+  }
+
+  .hero-headline-animated {
+    font-size: clamp(2.2rem, 7.5vw, 3rem);
+  }
+
+  .typed-headline-text.bn-font {
+    font-size: clamp(2rem, 7vw, 2.7rem);
+  }
+
+  .hero-alpona-watermark {
+    width: 260px;
+    height: 260px;
+    opacity: 0.05;
+  }
+
+  .hero-bottom-art-strip {
+    height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-headline-container {
+    min-height: 155px;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn-hero-primary,
+  .btn-hero-outline {
+    width: 100%;
+    justify-content: center;
+  }
+}

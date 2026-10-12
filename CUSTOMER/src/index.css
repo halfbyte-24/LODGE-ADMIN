@@ -1,0 +1,405 @@
+/* =========================================================================
+   BENGALI HERITAGE LODGE & RESTAURANT - PREMIUM DESIGN SYSTEM
+   ========================================================================= */
+
+:root {
+  /* Requested exact Bengali boutique palette */
+  --cream: #F7E9C9;
+  --paper: #F4E4C3;
+  --yellow: #F6B51B;
+  --mustard: #D99A16;
+  --red: #B52222;
+  --deep-red: #8F1717;
+  --green: #1F4D2E;
+  --dark-text: #252019;
+  --muted-text: #6B5A43;
+
+  /* Warm ivory / parchment / cream backgrounds */
+  --bg-primary: #FAF6ED;
+  --bg-surface: #F5EEDB;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #FFFDF8;
+  --bg-elevated: #FFFFFF;
+  --bg-overlay: rgba(37, 32, 25, 0.7);
+  
+  /* Topbar & Footer in warm cream / deep red / green accents */
+  --bg-topbar: #FAF6ED;
+  --bg-footer: #F2E7D0; /* Light warm cream footer */
+  --footer-text: #252019;
+
+  /* Charcoal / dark brown typography */
+  --text-primary: #252019;
+  --text-secondary: #6B5A43;
+  --text-muted: #8E7C67;
+  --text-light: #FAF6ED;
+  --text-gold: #D99A16;
+  --text-green: #1F4D2E;
+
+  /* Terracotta / Bengali red accents */
+  --accent-terracotta: #B52222;
+  --accent-terracotta-hover: #8F1717;
+  
+  /* Mustard yellow accents */
+  --accent-gold: #D99A16;
+  --accent-gold-hover: #B87E0E;
+  --accent-gold-soft: rgba(217, 154, 22, 0.15);
+  --accent-gold-subtle: rgba(217, 154, 22, 0.08);
+  
+  /* Bengali green accents */
+  --accent-green: #1F4D2E;
+
+  /* Borders */
+  --border-subtle: #E8DAC0;
+  --border-medium: #D9C8A8;
+  --border-gold: rgba(217, 154, 22, 0.4);
+
+  /* Shadows with warmth */
+  --shadow-sm: 0 4px 12px rgba(50, 40, 30, 0.04);
+  --shadow-md: 0 10px 30px rgba(50, 40, 30, 0.07);
+  --shadow-lg: 0 20px 50px rgba(50, 40, 30, 0.1);
+  --shadow-floating: 0 20px 45px rgba(50, 40, 30, 0.12);
+
+  /* Nav specific */
+  --nav-bg-scrolled: rgba(250, 246, 237, 0.98);
+  --nav-text: #252019;
+  --nav-border: rgba(181, 34, 34, 0.15);
+
+  --booking-bar-bg: #FFFFFF;
+  --booking-bar-border: rgba(217, 154, 22, 0.35);
+
+  --badge-veg: #1F4D2E;
+  --badge-nonveg: #B52222;
+}
+
+[data-theme="night"] {
+  /* Warm darker Bengali aesthetic - deep terracotta-charcoal paper tone */
+  --bg-primary: #1F1916;
+  --bg-surface: #26201C;
+  --bg-card: #2C231F;
+  --bg-card-hover: #332A25;
+  --bg-elevated: #2E2520;
+  --bg-overlay: rgba(18, 14, 12, 0.85);
+
+  --bg-topbar: #191412;
+  --bg-footer: #15110F;
+
+  --text-primary: #F7EFE6;
+  --text-secondary: #D4C7B8;
+  --text-muted: #9E9182;
+  --text-light: #FFFFFF;
+  --text-gold: #E2B25E;
+
+  --accent-terracotta: #D04F42;
+  --accent-terracotta-hover: #B83F34;
+
+  --accent-gold: #E2B25E;
+  --accent-gold-hover: #F0C475;
+  --accent-gold-soft: rgba(226, 178, 94, 0.18);
+  --accent-gold-subtle: rgba(226, 178, 94, 0.1);
+
+  --border-subtle: #3D332D;
+  --border-medium: #4D4038;
+  --border-gold: rgba(226, 178, 94, 0.35);
+
+  --nav-bg-scrolled: rgba(31, 25, 22, 0.98);
+  --nav-text: #F7EFE6;
+  --nav-border: rgba(208, 79, 66, 0.2);
+
+  --booking-bar-bg: #2C231F;
+  --booking-bar-border: rgba(226, 178, 94, 0.35);
+}
+
+/* Global Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent-gold);
+  border-radius: 4px;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+p {
+  color: var(--text-secondary);
+  font-weight: 300;
+  font-size: 0.98rem;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+button {
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+/* Base Hotel Buttons */
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--accent-gold);
+  color: #ffffff;
+  padding: 12px 24px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(166, 124, 56, 0.25);
+  border: 1px solid transparent;
+}
+
+.btn-gold:hover {
+  background: var(--accent-gold-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(166, 124, 56, 0.35);
+  color: #ffffff;
+}
+
+.btn-outline-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--accent-gold);
+  border: 1px solid var(--accent-gold);
+  padding: 11px 22px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: all 0.25s ease;
+}
+
+.btn-outline-gold:hover {
+  background: var(--accent-gold);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.btn-white {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #ffffff;
+  color: #1e2024;
+  padding: 12px 26px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.btn-white:hover {
+  background: var(--bg-card-hover);
+  transform: translateY(-1px);
+}
+
+/* Section Wrappers */
+.section-wrapper {
+  max-width: 1260px;
+  margin: 0 auto;
+  padding: 85px 24px;
+  position: relative;
+}
+
+.section-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 50px;
+}
+
+.section-eyebrow {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.section-title {
+  font-size: clamp(2.1rem, 3.8vw, 3.1rem);
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+}
+
+.section-title-line {
+  width: 50px;
+  height: 2px;
+  background-color: var(--accent-gold);
+  margin: 14px auto 18px;
+  border-radius: 2px;
+}
+
+.section-subtitle {
+  font-size: 1.02rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+/* Hotel Page Header (for /rooms, /restaurant, etc.) */
+.page-hero-banner {
+  position: relative;
+  height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 24px;
+  background-size: cover;
+  background-position: center center;
+}
+
+.page-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(14, 16, 20, 0.65) 0%, rgba(14, 16, 20, 0.88) 100%);
+}
+
+.page-hero-content {
+  position: relative;
+  z-index: 5;
+  max-width: 800px;
+}
+
+.page-hero-eyebrow {
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.page-hero-title {
+  font-size: clamp(2.4rem, 4vw, 3.6rem);
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.page-hero-desc {
+  font-size: 1.05rem;
+  color: #e2e4e8;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Modals */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-overlay);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: modalFadeIn 0.25s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-dialog {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: var(--shadow-lg);
+  color: var(--text-primary);
+}
+
+.modal-close-icon {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.modal-close-icon:hover {
+  background: var(--accent-gold);
+  color: #ffffff;
+}
+
+/* Responsive Utilities */
+@media (max-width: 768px) {
+  .section-wrapper {
+    padding: 60px 18px;
+  }
+  .page-hero-banner {
+    height: 300px;
+  }
+}

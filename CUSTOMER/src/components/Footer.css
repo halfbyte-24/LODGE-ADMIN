@@ -1,0 +1,240 @@
+.bengali-footer {
+  background-color: var(--bg-footer, #F4E4C3);
+  color: var(--text-primary);
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(155, 28, 28, 0.2);
+}
+
+/* Subtle alpona background watermark */
+.bengali-footer::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 300px;
+  height: 300px;
+  background-image: url('/images/art7.jpg');
+  background-size: cover;
+  opacity: 0.06;
+  transform: rotate(12deg);
+  pointer-events: none;
+  filter: sepia(1) saturate(0.2) brightness(0.7);
+  mix-blend-mode: multiply;
+  z-index: 1;
+}
+
+/* Thin horizontal Bengali decorative border at footer top */
+.footer-top-strip {
+  width: 100%;
+  height: 5px;
+  background: repeating-linear-gradient(
+    90deg,
+    #9B1C1C 0px,
+    #9B1C1C 20px,
+    #D99A16 20px,
+    #D99A16 35px,
+    #1F4D2E 35px,
+    #1F4D2E 50px,
+    #8B6A4E 50px,
+    #8B6A4E 65px
+  );
+  opacity: 0.9;
+  position: relative;
+  z-index: 2;
+}
+
+.footer-container {
+  padding: 42px 32px 32px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Balanced 4-Column Desktop Grid */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr 0.8fr 1.7fr 1.1fr;
+  gap: 36px;
+  align-items: start;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-brand-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #9B1C1C;
+  margin-bottom: 4px;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+}
+
+.footer-brand-subtitle {
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  color: var(--accent-green, #1F4D2E);
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+.footer-book-btn {
+  align-self: flex-start;
+  padding: 9px 20px;
+  font-size: 0.85rem;
+}
+
+.footer-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  position: relative;
+  padding-bottom: 6px;
+}
+
+.footer-heading::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 28px;
+  height: 2px;
+  background-color: #9B1C1C;
+}
+
+.footer-links-list,
+.footer-contact-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links-list a {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: inline-block;
+}
+
+.footer-links-list a:hover {
+  color: #9B1C1C;
+  transform: translateX(4px);
+}
+
+/* Contact items: Left-aligned, fixed icon column, single-line text where space permits */
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-secondary);
+  font-size: 0.87rem;
+  line-height: 1.5;
+}
+
+.contact-item:first-child {
+  align-items: flex-start;
+}
+
+.contact-icon-col {
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.contact-icon {
+  color: #9B1C1C;
+}
+
+.contact-text {
+  flex: 1;
+  text-align: left;
+  word-break: normal;
+}
+
+.contact-text a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.contact-text a:hover {
+  color: #9B1C1C;
+  text-decoration: underline;
+}
+
+/* Map frame & Directions link */
+.footer-map-frame {
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 4px 12px rgba(37, 32, 25, 0.06);
+  background: white;
+}
+
+.footer-map-frame iframe {
+  display: block;
+}
+
+.footer-directions-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #9B1C1C;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.footer-directions-link:hover {
+  color: var(--accent-gold, #D99A16);
+  transform: translateX(2px);
+}
+
+/* Footer bottom row */
+.footer-bottom {
+  border-top: 1px solid rgba(139, 106, 78, 0.2);
+  padding: 16px 24px;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  background: rgba(0, 0, 0, 0.02);
+  position: relative;
+  z-index: 2;
+}
+
+.footer-bottom p {
+  margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-container {
+    padding: 36px 20px 24px;
+  }
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}

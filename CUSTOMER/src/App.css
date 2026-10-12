@@ -1,0 +1,6 @@
+/* App specific styling */
+.aura-lodge-app {
+  min-height: 100vh;
+  position: relative;
+  background-color: var(--bg-main);
+}

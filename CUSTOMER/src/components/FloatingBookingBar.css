@@ -1,0 +1,120 @@
+/* Floating Booking Bar Styles */
+.floating-booking-wrapper {
+  position: relative;
+  z-index: 50;
+  margin-top: -65px; /* Overlaps bottom of hero */
+  padding: 0 24px;
+}
+
+.floating-booking-container {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.hotel-reservation-card {
+  background: var(--booking-bar-bg);
+  border: 1px solid var(--booking-bar-border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-floating);
+  display: flex;
+  align-items: center;
+  padding: 18px 24px;
+  gap: 16px;
+  transition: all 0.3s ease;
+}
+
+.res-field-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.res-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+}
+
+.res-icon {
+  color: var(--accent-gold);
+}
+
+.res-input,
+.res-select {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.res-input:focus,
+.res-select:focus {
+  border-color: var(--accent-gold);
+}
+
+.res-divider-line {
+  width: 1px;
+  height: 40px;
+  background-color: var(--border-subtle);
+}
+
+.res-btn-col {
+  flex: 0 0 auto;
+  align-self: flex-end;
+}
+
+.res-submit-btn {
+  height: 44px;
+  padding: 0 26px;
+  white-space: nowrap;
+}
+
+/* Tablet & Mobile Layout */
+@media (max-width: 1024px) {
+  .floating-booking-wrapper {
+    margin-top: -30px;
+  }
+  .hotel-reservation-card {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    padding: 20px;
+  }
+  .res-divider-line {
+    display: none;
+  }
+  .res-btn-col {
+    grid-column: span 2;
+    align-self: stretch;
+  }
+  .res-submit-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .floating-booking-wrapper {
+    margin-top: -20px;
+    padding: 0 16px;
+  }
+  .hotel-reservation-card {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 16px;
+  }
+  .res-btn-col {
+    grid-column: span 1;
+  }
+}

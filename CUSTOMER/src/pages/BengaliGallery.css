@@ -1,0 +1,7 @@
+/* Add to BengaliPages.css via run_command later or just keep inline styles where easy. I will append the hover effect for gallery. */
+.gallery-image-box:hover img {
+  transform: scale(1.1);
+}
+.gallery-image-box:hover .gallery-hover-overlay {
+  opacity: 1;
+}

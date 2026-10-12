@@ -1,0 +1,162 @@
+/* Wellness Section Styles */
+.wellness-section {
+  position: relative;
+  background-color: var(--bg-main);
+  border-bottom: 1px solid var(--border-subtle);
+  overflow: hidden;
+}
+
+.wellness-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-bottom: 56px;
+}
+
+.wellness-highlight-card {
+  padding: 36px 32px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.highlight-icon-box {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: rgba(203, 163, 88, 0.1);
+  border: 1px solid var(--border-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 22px;
+}
+
+.wellness-highlight-card h3 {
+  font-size: 1.55rem;
+  margin-bottom: 12px;
+}
+
+.wellness-highlight-card p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 20px;
+}
+
+.highlight-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.highlight-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* Treatments Showcase Box */
+.wellness-treatments-box {
+  border-radius: 12px;
+  padding: 38px 42px;
+  border: 1px solid var(--border-subtle);
+}
+
+.treatments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.treatments-title {
+  font-size: 1.85rem;
+  margin-top: 6px;
+}
+
+.treatments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.treatment-item {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.treatment-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.treatment-top {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 6px;
+}
+
+.treatment-name {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.treatment-dots {
+  flex: 1;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+}
+
+.treatment-price-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.t-duration {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.t-price {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  color: var(--gold-light);
+  font-weight: 600;
+}
+
+.treatment-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+@media (max-width: 1024px) {
+  .wellness-feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .wellness-treatments-box {
+    padding: 24px 18px;
+  }
+  .treatment-top {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .treatment-dots {
+    display: none;
+  }
+}
