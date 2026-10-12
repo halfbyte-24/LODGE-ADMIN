@@ -1,0 +1,5 @@
+
+# Generated Android build files
+**/.gradle/
+**/build/
+**/capacitor-cordova-android-plugins/
