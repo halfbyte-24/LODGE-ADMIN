@@ -21,9 +21,9 @@ import RoomsManagement from './pages/staff/RoomsManagement';
 import BillHistoryPage from './pages/staff/BillHistoryPage';
 
 // Icons
-import { LayoutDashboard, Users, BedDouble, Receipt, Settings, LogOut, DollarSign, CalendarCheck } from 'lucide-react';
+import { LayoutDashboard, Users, BedDouble, Receipt, Settings, LogOut, DollarSign, CalendarCheck, Menu, X } from 'lucide-react';
 
-const StaffSidebar = () => {
+const StaffSidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
   const { logout, profile } = useAuth();
   
@@ -38,35 +38,75 @@ const StaffSidebar = () => {
   ];
 
   return (
-    <div className="sidebar">
-      <div className="sidebar-logo">Amontron Hotel and Restaurant</div>
-      <div style={{ padding: '0 1rem', color: '#94a3b8', fontSize: '0.875rem', marginBottom: '1rem' }}>Staff Panel</div>
-      
-      <nav className="sidebar-nav" style={{ flex: 1 }}>
-        {menu.map(item => (
-          <Link key={item.path} to={item.path} className={`sidebar-link ${location.pathname.startsWith(item.path) ? 'active' : ''}`}>
-            {item.icon}
-            <span>{item.name}</span>
-          </Link>
-        ))}
-      </nav>
+    <>
+      {isOpen && <div className="sidebar-overlay" onClick={onClose} />}
+      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem 1rem 0.5rem 1rem' }}>
+          <div className="sidebar-logo" style={{ padding: 0, border: 'none', fontSize: '1.1rem', fontWeight: 800 }}>
+            Amontron Hotel
+          </div>
+          <button 
+            type="button" 
+            className="mobile-close-btn" 
+            onClick={onClose}
+            aria-label="Close navigation"
+          >
+            <X size={22} />
+          </button>
+        </div>
+        <div style={{ padding: '0 1rem', color: '#94a3b8', fontSize: '0.75rem', marginBottom: '1rem', fontWeight: 'bold', letterSpacing: '1px' }}>
+          STAFF PANEL
+        </div>
+        
+        <nav className="sidebar-nav" style={{ flex: 1 }}>
+          {menu.map(item => (
+            <Link 
+              key={item.path} 
+              to={item.path} 
+              onClick={() => { if (onClose) onClose(); }}
+              className={`sidebar-link ${location.pathname.startsWith(item.path) ? 'active' : ''}`}
+            >
+              {item.icon}
+              <span>{item.name}</span>
+            </Link>
+          ))}
+        </nav>
 
-      <div style={{ padding: '1rem', borderTop: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>{profile?.full_name || 'Staff User'}</div>
-        <button onClick={logout} className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%', justifyContent: 'center' }}>
-          <LogOut size={16} /> Logout
-        </button>
-      </div>
-    </div>
+        <div style={{ padding: '1rem', borderTop: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>{profile?.full_name || 'Staff User'}</div>
+          <button onClick={logout} className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%', justifyContent: 'center', minHeight: '44px' }}>
+            <LogOut size={16} /> Logout
+          </button>
+        </div>
+      </aside>
+    </>
   );
 };
 
-const StaffLayout = ({ children }) => (
-  <div className="app-layout">
-    <StaffSidebar />
-    <div className="app-content">{children}</div>
-  </div>
-);
+const StaffLayout = ({ children }) => {
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+
+  return (
+    <div className="app-layout">
+      {/* Mobile Top Header */}
+      <header className="mobile-top-bar">
+        <button 
+          type="button" 
+          className="mobile-menu-btn" 
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Open menu"
+        >
+          <Menu size={24} />
+        </button>
+        <div className="mobile-bar-title">Amontron Hotel & Restaurant</div>
+        <div style={{ width: 44 }}></div>
+      </header>
+
+      <StaffSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <main className="app-content">{children}</main>
+    </div>
+  );
+};
 
 const RootRedirect = () => {
   const { user, profile, loading } = useAuth();

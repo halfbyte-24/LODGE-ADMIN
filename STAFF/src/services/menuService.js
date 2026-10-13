@@ -2,25 +2,55 @@ import { supabase } from '../lib/supabase';
 
 export const menuService = {
   async getMenu() {
-    // Fetch categories and items
-    const { data: items, error: itemsError } = await supabase
-      .from('menu_items')
-      .select('*, menu_categories(name, type)')
-      .eq('is_available', true);
+    // Fetch categories, items and services in parallel
+    const [itemsRes, catsRes, servicesRes] = await Promise.all([
+      supabase
+        .from('menu_items')
+        .select('*, menu_categories(id, name, type)')
+        .eq('is_available', true)
+        .order('name', { ascending: true }),
+      supabase
+        .from('menu_categories')
+        .select('*')
+        .eq('is_active', true)
+        .order('sort_order', { ascending: true })
+        .order('name', { ascending: true }),
+      supabase
+        .from('services')
+        .select('*')
+        .eq('is_available', true)
+        .order('name', { ascending: true })
+    ]);
 
-    if (itemsError) throw itemsError;
+    if (itemsRes.error) {
+      console.error('[menuService] Error loading items:', itemsRes.error);
+      throw itemsRes.error;
+    }
 
-    const { data: services, error: servicesError } = await supabase
-      .from('services')
-      .select('*')
-      .eq('is_available', true);
+    const rawItems = itemsRes.data || [];
+    const categories = catsRes.data || [];
+    const services = servicesRes.data || [];
 
-    if (servicesError) throw servicesError;
+    // Map items with safe category properties
+    const enrichedItems = rawItems.map(item => {
+      const cat = item.menu_categories;
+      return {
+        ...item,
+        category_id: item.category_id,
+        category_name: cat?.name || 'General',
+        category_type: cat?.type || 'food'
+      };
+    });
 
-    // Group items
-    const food = items.filter(i => i.menu_categories.type === 'food').map(i => ({...i, category_name: i.menu_categories.name}));
-    const drinks = items.filter(i => i.menu_categories.type === 'drink').map(i => ({...i, category_name: i.menu_categories.name}));
+    const food = enrichedItems.filter(i => i.category_type !== 'drink');
+    const drinks = enrichedItems.filter(i => i.category_type === 'drink');
 
-    return { food, drinks, services };
+    return { 
+      items: enrichedItems,
+      categories,
+      food, 
+      drinks, 
+      services 
+    };
   }
 };

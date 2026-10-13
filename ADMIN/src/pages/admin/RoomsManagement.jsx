@@ -89,13 +89,13 @@ export default function RoomsManagement() {
   }, [rooms]);
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+    <div style={{ padding: '1.5rem 1rem', maxWidth: '1200px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.5rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: 'var(--text-main)' }}>Room Management &amp; Pricing</h1>
-          <p style={{ color: 'var(--text-muted)' }}>Admin control over all 9 lodge rooms (3 per floor) &amp; nightly rates.</p>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>Room Management &amp; Pricing</h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0 }}>Admin control over all 9 lodge rooms &amp; nightly rates.</p>
         </div>
-        <button className="btn btn-outline" onClick={loadRooms} disabled={loading}>
+        <button className="btn btn-outline" onClick={loadRooms} disabled={loading} style={{ minHeight: '40px' }}>
           <RefreshCw size={16} /> Refresh
         </button>
       </div>
@@ -118,13 +118,13 @@ export default function RoomsManagement() {
         <div>
           {Object.entries(floors).map(([floorName, floorRooms]) => (
             <div key={floorName} style={{ marginBottom: '2.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', borderBottom: '2px solid var(--border-color)', paddingBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', borderBottom: '2px solid var(--border-color)', paddingBottom: '0.5rem', flexWrap: 'wrap' }}>
                 <BedDouble size={22} style={{ color: 'var(--primary-color)' }} />
-                <h2 style={{ fontSize: '1.35rem', fontWeight: 700, margin: 0 }}>{floorName}</h2>
+                <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0 }}>{floorName}</h2>
                 <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>({floorRooms.length} Rooms • 2 Double Beds per Room)</span>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1rem' }}>
                 {floorRooms.map(room => (
                   <div key={room.id} className="card" style={{ padding: '1.5rem', borderTop: `4px solid ${room.status === 'available' ? '#10b981' : room.status === 'occupied' ? '#ef4444' : '#f59e0b'}` }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>

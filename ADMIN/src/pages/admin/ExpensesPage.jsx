@@ -99,17 +99,17 @@ export default function ExpensesPage() {
   const totalExpenseAmount = expenses.reduce((sum, e) => sum + Number(e.amount || 0), 0);
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '1100px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+    <div style={{ padding: '1.5rem 1rem', maxWidth: '1100px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.5rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: 'var(--text-main)' }}>Lodge Expenses</h1>
-          <p style={{ color: 'var(--text-muted)' }}>Track operational and supply costs recorded by staff.</p>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>Lodge Expenses</h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0 }}>Track operational and supply costs recorded by staff.</p>
         </div>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <button className="btn btn-outline" onClick={loadExpenses} disabled={loading}>
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <button className="btn btn-outline" onClick={loadExpenses} disabled={loading} style={{ minHeight: '40px' }}>
             <RefreshCw size={16} /> Refresh
           </button>
-          <button className="btn btn-primary" onClick={() => setShowAddForm(!showAddForm)}>
+          <button className="btn btn-primary" onClick={() => setShowAddForm(!showAddForm)} style={{ minHeight: '40px' }}>
             <Plus size={16} /> {showAddForm ? 'Cancel' : 'Record Expense'}
           </button>
         </div>

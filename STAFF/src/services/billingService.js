@@ -128,14 +128,26 @@ export const billingService = {
       if (searchError) throw searchError;
 
       if (existingItems && existingItems.length > 0) {
-        const existing = existingItems[0];
-        const newQty = (Number(existing.quantity) || 0) + quantity;
-        const newTotal = Number(existing.unit_price) * newQty;
+        // If multiple duplicate rows exist due to race conditions, consolidate into first
+        const primary = existingItems[0];
+        let totalExistingQty = 0;
+        existingItems.forEach(row => {
+          totalExistingQty += (Number(row.quantity) || 0);
+        });
+
+        // Clean up any extra duplicates
+        if (existingItems.length > 1) {
+          const duplicateIds = existingItems.slice(1).map(row => row.id);
+          await supabase.from('bill_items').delete().in('id', duplicateIds);
+        }
+
+        const newQty = totalExistingQty + quantity;
+        const newTotal = Number(primary.unit_price) * newQty;
         
         const { data, error } = await supabase
           .from('bill_items')
           .update({ quantity: newQty, total_price: newTotal })
-          .eq('id', existing.id)
+          .eq('id', primary.id)
           .select()
           .single();
         if (error) throw error;
@@ -193,7 +205,7 @@ export const billingService = {
   async getBillDetails(billId) {
     const { data, error } = await supabase
       .from('bills')
-      .select('*, bill_items(*), customers(*), bookings(*, rooms(*))')
+      .select('*, bill_items(*), customers(*), bookings(*, rooms(*)), payments(*)')
       .eq('id', billId)
       .single();
     if (error) throw error;

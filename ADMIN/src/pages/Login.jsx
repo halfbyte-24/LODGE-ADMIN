@@ -40,8 +40,8 @@ export default function Login() {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', alignItems: 'center', justifyContent: 'center', backgroundColor: '#0f172a', padding: '1rem' }}>
-      <div style={{ background: '#ffffff', padding: '2.5rem 2rem', borderRadius: '12px', boxShadow: '0 10px 25px -5px rgb(0 0 0 / 0.3)', width: '100%', maxWidth: '400px', border: '1px solid #334155' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', alignItems: 'center', justifyContent: 'center', backgroundColor: '#0f172a', padding: '1rem 0.75rem' }}>
+      <div style={{ background: '#ffffff', padding: '2rem 1.25rem', borderRadius: '12px', boxShadow: '0 10px 25px -5px rgb(0 0 0 / 0.3)', width: '100%', maxWidth: '400px', border: '1px solid #334155', boxSizing: 'border-box' }}>
         
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{ width: '64px', height: '64px', background: '#0f172a', color: '#fbbf24', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem auto' }}>

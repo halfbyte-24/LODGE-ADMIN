@@ -37,24 +37,26 @@ export default function BillingIndex() {
   });
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '1000px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+    <div style={{ padding: '1.5rem 1rem', maxWidth: '1000px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.5rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold' }}>Billing</h1>
-          <p style={{ color: 'var(--text-muted)' }}>Manage active customer bills</p>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, margin: 0 }}>Billing</h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0 }}>Manage active customer bills</p>
         </div>
-        <button className="btn btn-primary" onClick={() => navigate('/staff/new-customer')}>New Customer Bill</button>
+        <button className="btn btn-primary" onClick={() => navigate('/staff/new-customer')} style={{ minHeight: '44px' }}>
+          New Customer Bill
+        </button>
       </div>
 
-      <div className="card" style={{ marginBottom: '2rem' }}>
+      <div className="card" style={{ marginBottom: '1.5rem', padding: '1rem' }}>
         <div className="input-group">
           <div style={{ position: 'relative' }}>
             <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
             <input 
               type="text" 
               className="input" 
-              style={{ width: '100%', paddingLeft: '2.5rem', paddingRight: '1rem', paddingBottom: '0.75rem', paddingTop: '0.75rem' }} 
-              placeholder="Search by customer name, phone, room, or invoice number..." 
+              style={{ width: '100%', paddingLeft: '2.5rem', paddingRight: '1rem', minHeight: '44px' }} 
+              placeholder="Search by customer name, phone, room, or invoice..." 
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
             />
@@ -62,18 +64,18 @@ export default function BillingIndex() {
         </div>
       </div>
 
-      <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '1rem' }}>Active Draft Bills</h2>
+      <h2 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '1rem' }}>Active Draft Bills</h2>
       
       {loading ? (
-        <div>Loading active bills...</div>
+        <div style={{ textAlign: 'center', padding: '2rem' }}>Loading active bills...</div>
       ) : filteredDrafts.length === 0 ? (
-        <div className="card" style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+        <div className="card" style={{ padding: '3rem 1rem', textAlign: 'center', color: 'var(--text-muted)' }}>
           <FileText size={48} style={{ margin: '0 auto 1rem auto', opacity: 0.5 }} />
           <h3>No active draft bills found</h3>
           <p>Create a new customer or search for an existing one to start a bill.</p>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1rem' }}>
           {filteredDrafts.map(draft => (
             <div 
               key={draft.id} 

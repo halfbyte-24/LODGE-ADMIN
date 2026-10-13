@@ -61,10 +61,10 @@ export default function HotelSettingsPage() {
   };
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
-      <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: 'var(--text-main)' }}>Hotel Configuration</h1>
-        <p style={{ color: 'var(--text-muted)' }}>Configure lodge contact details, address, and invoice headers.</p>
+    <div style={{ padding: '1.5rem 1rem', maxWidth: '800px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>Hotel Configuration</h1>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0 }}>Configure lodge contact details, address, and invoice headers.</p>
       </div>
 
       {message.text && (
@@ -79,9 +79,9 @@ export default function HotelSettingsPage() {
         </div>
       )}
 
-      <div className="card" style={{ padding: '2rem' }}>
+      <div className="card" style={{ padding: '1.5rem 1.25rem' }}>
         <form onSubmit={handleSave}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
             <div className="input-group" style={{ gridColumn: '1 / -1' }}>
               <label className="input-label">Hotel / Lodge Name</label>
               <input 

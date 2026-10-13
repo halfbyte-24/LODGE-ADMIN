@@ -1,0 +1,9 @@
+{
+  "name": "lodge-workspaces",
+  "private": true,
+  "scripts": {
+    "dev:customer": "npm --prefix CUSTOMER run dev",
+    "dev:admin": "npm --prefix ADMIN run dev",
+    "dev:staff": "npm --prefix STAFF run dev"
+  }
+}

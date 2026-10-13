@@ -110,13 +110,13 @@ export default function AdminDashboard() {
   }, []);
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '1300px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+    <div style={{ padding: '1.5rem 1rem', maxWidth: '1300px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.5rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: 'var(--text-main)' }}>Profit &amp; Loss Dashboard</h1>
-          <p style={{ color: 'var(--text-muted)' }}>Financial overview and operational health for Amontron Hotel and Restaurant.</p>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>Profit &amp; Loss Dashboard</h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0 }}>Financial overview and operational health for Amontron Hotel and Restaurant.</p>
         </div>
-        <button className="btn btn-outline" onClick={loadFinancialData} disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <button className="btn btn-outline" onClick={loadFinancialData} disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minHeight: '40px' }}>
           <RefreshCw size={16} /> Refresh
         </button>
       </div>
@@ -126,13 +126,13 @@ export default function AdminDashboard() {
       ) : (
         <>
           {/* PRIMARY CASH FLOW METRICS */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
-            <div className="card" style={{ padding: '1.5rem', borderLeft: '4px solid #10b981' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+            <div className="card" style={{ padding: '1.25rem', borderLeft: '4px solid #10b981' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
                 <span>Actual Cash Received</span>
                 <TrendingUp size={20} color="#10b981" />
               </div>
-              <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#10b981', marginTop: '0.5rem' }}>
+              <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: '#10b981', marginTop: '0.5rem' }}>
                 ₹{stats.totalPaymentsReceived.toFixed(2)}
               </div>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
@@ -140,12 +140,12 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <div className="card" style={{ padding: '1.5rem', borderLeft: '4px solid #ef4444' }}>
+            <div className="card" style={{ padding: '1.25rem', borderLeft: '4px solid #ef4444' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
                 <span>Approved Expenses</span>
                 <TrendingDown size={20} color="#ef4444" />
               </div>
-              <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#ef4444', marginTop: '0.5rem' }}>
+              <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: '#ef4444', marginTop: '0.5rem' }}>
                 ₹{stats.totalApprovedExpenses.toFixed(2)}
               </div>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
@@ -153,12 +153,12 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <div className="card" style={{ padding: '1.5rem', borderLeft: `4px solid ${stats.netProfitLoss >= 0 ? '#10b981' : '#ef4444'}` }}>
+            <div className="card" style={{ padding: '1.25rem', borderLeft: `4px solid ${stats.netProfitLoss >= 0 ? '#10b981' : '#ef4444'}` }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
                 <span>Net Cash Movement</span>
                 <DollarSign size={20} color={stats.netProfitLoss >= 0 ? '#10b981' : '#ef4444'} />
               </div>
-              <div style={{ fontSize: '2rem', fontWeight: 'bold', color: stats.netProfitLoss >= 0 ? '#10b981' : '#ef4444', marginTop: '0.5rem' }}>
+              <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: stats.netProfitLoss >= 0 ? '#10b981' : '#ef4444', marginTop: '0.5rem' }}>
                 ₹{stats.netProfitLoss.toFixed(2)}
               </div>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
@@ -166,12 +166,12 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <div className="card" style={{ padding: '1.5rem', borderLeft: '4px solid #f59e0b' }}>
+            <div className="card" style={{ padding: '1.25rem', borderLeft: '4px solid #f59e0b' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
                 <span>Outstanding Balance</span>
                 <Receipt size={20} color="#f59e0b" />
               </div>
-              <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#f59e0b', marginTop: '0.5rem' }}>
+              <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: '#f59e0b', marginTop: '0.5rem' }}>
                 ₹{stats.outstandingDue.toFixed(2)}
               </div>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
@@ -181,29 +181,29 @@ export default function AdminDashboard() {
           </div>
 
           {/* OPERATIONAL COUNTERS */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
             <div className="card" style={{ padding: '1.25rem' }}>
               <div style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Pending Online Requests</div>
-              <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: '#d97706', marginTop: '0.25rem' }}>
+              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#d97706', marginTop: '0.25rem' }}>
                 {stats.pendingBookingsCount}
               </div>
             </div>
             <div className="card" style={{ padding: '1.25rem' }}>
               <div style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Total Stays Booked</div>
-              <div style={{ fontSize: '1.75rem', fontWeight: 'bold', marginTop: '0.25rem' }}>
+              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', marginTop: '0.25rem' }}>
                 {stats.totalBookingsCount}
               </div>
             </div>
             <div className="card" style={{ padding: '1.25rem' }}>
               <div style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Occupied Rooms</div>
-              <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: '#8b5cf6', marginTop: '0.25rem' }}>
+              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#8b5cf6', marginTop: '0.25rem' }}>
                 {stats.occupiedRoomsCount} / {stats.totalRoomsCount}
               </div>
             </div>
           </div>
 
           {/* TWO COLUMN RECENT TABLES */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1.5rem' }}>
             {/* Recent Payments */}
             <div className="card" style={{ padding: '1.5rem' }}>
               <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem' }}>Recent Payments Settled</h2>
