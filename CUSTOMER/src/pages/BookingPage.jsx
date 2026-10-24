@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Calendar, Users, BedDouble, ArrowRight, CheckCircle2, Check, ShieldCheck, Tag, RefreshCw, AlertCircle } from 'lucide-react';
+import { Calendar, Users, BedDouble, ArrowRight, CheckCircle2, Check, ShieldCheck, Tag, RefreshCw, AlertCircle, MessageCircle } from 'lucide-react';
 import { ROOM_TYPES, PHYSICAL_ROOMS } from '../data/hotelData';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 import { createBooking } from '../lib/bookingService';
+import { contactRoutingService } from '../services/contactRoutingService';
+import { useHotelSettings } from '../context/HotelSettingsContext';
 import './Pages.css';
 
 export default function BookingPage() {
+  const { hotelSettings } = useHotelSettings();
   const location = useLocation();
   const navState = location.state || {};
 
@@ -402,7 +405,7 @@ export default function BookingPage() {
                       <input 
                         type="text" 
                         required 
-                        placeholder="e.g. Subir Ghosh"
+                        placeholder="Enter your full name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                       />
@@ -412,7 +415,7 @@ export default function BookingPage() {
                       <input 
                         type="tel" 
                         required 
-                        placeholder="+91 98765 43210"
+                        placeholder="Enter your phone number"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                       />
@@ -424,7 +427,7 @@ export default function BookingPage() {
                     <input 
                       type="email" 
                       required 
-                      placeholder="subir@example.com"
+                      placeholder="Enter your email address"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
@@ -434,7 +437,7 @@ export default function BookingPage() {
                     <label>Special Requests or Arrival Notes (Optional)</label>
                     <textarea 
                       rows={3} 
-                      placeholder="e.g. Early check-in request, quiet floor preference..."
+                      placeholder="Describe your enquiry or special requests"
                       value={specialRequests}
                       onChange={(e) => setSpecialRequests(e.target.value)}
                     />
@@ -498,13 +501,38 @@ export default function BookingPage() {
                     </div>
                     <div className="perk-item">
                       <CheckCircle2 size={14} className="text-gold" />
-                      <span>Free Secure Vehicle Parking</span>
+                      <span>Standard Check-in: <strong>{hotelSettings.timings?.checkIn || hotelSettings.check_in_time || '12:00 PM'}</strong></span>
                     </div>
                     <div className="perk-item">
                       <CheckCircle2 size={14} className="text-gold" />
-                      <span>24-Hour Front Desk Check-in</span>
+                      <span>Standard Check-out: <strong>{hotelSettings.timings?.checkOut || hotelSettings.check_out_time || '11:00 AM'}</strong></span>
                     </div>
                   </div>
+
+                  <button
+                    type="button"
+                    className="btn-outline-gold w-100"
+                    style={{ marginTop: '16px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px', background: 'transparent', cursor: 'pointer' }}
+                    onClick={async () => {
+                      const res = await contactRoutingService.getBookingWhatsAppAction({
+                        guestName: name || 'Guest',
+                        guestPhone: phone,
+                        roomName: selectedRooms.map(r => `Room ${r.room_number} (${r.categoryName})`).join(', '),
+                        checkIn,
+                        checkOut,
+                        guests,
+                        totalAmount: totalPrice
+                      });
+                      if (res.configured && res.url) {
+                        window.open(res.url, '_blank', 'noopener,noreferrer');
+                      } else {
+                        alert(res.errorMessage || 'Room Booking WhatsApp recipient is not configured in Admin Settings. Please call +91 94334 24718.');
+                      }
+                    }}
+                  >
+                    <MessageCircle size={16} />
+                    <span>Enquire via WhatsApp</span>
+                  </button>
                 </div>
               </aside>
 
@@ -526,11 +554,11 @@ export default function BookingPage() {
                 </div>
                 <div className="confirmed-row">
                   <span>Check-in:</span>
-                  <strong>{bookingConfirmed.checkIn}</strong>
+                  <strong>{bookingConfirmed.checkIn} (from {hotelSettings.timings?.checkIn || hotelSettings.check_in_time || '12:00 PM'})</strong>
                 </div>
                 <div className="confirmed-row">
                   <span>Check-out:</span>
-                  <strong>{bookingConfirmed.checkOut}</strong>
+                  <strong>{bookingConfirmed.checkOut} (by {hotelSettings.timings?.checkOut || hotelSettings.check_out_time || '11:00 AM'})</strong>
                 </div>
                 <div className="confirmed-row">
                   <span>Duration:</span>
@@ -547,12 +575,39 @@ export default function BookingPage() {
               </div>
 
               <p className="confirmation-notice">
-                Our front desk team will contact you via phone/WhatsApp to confirm physical room allocation and check-in time.
+                Our front desk team will contact you via phone/WhatsApp to confirm physical room allocation. Standard hotel policy check-in is from <strong>{hotelSettings.timings?.checkIn || hotelSettings.check_in_time || '12:00 PM'}</strong> and check-out is by <strong>{hotelSettings.timings?.checkOut || hotelSettings.check_out_time || '11:00 AM'}</strong>.
               </p>
 
-              <button className="btn-primary" onClick={() => setBookingConfirmed(null)}>
-                <span>Book Another Room</span>
-              </button>
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '20px' }}>
+                <button
+                  type="button"
+                  className="btn-outline-gold"
+                  style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px 24px', cursor: 'pointer', background: 'transparent' }}
+                  onClick={async () => {
+                    const res = await contactRoutingService.getBookingWhatsAppAction({
+                      guestName: bookingConfirmed.guestName,
+                      guestPhone: phone,
+                      roomName: `${bookingConfirmed.roomNames} (Ref: ${bookingConfirmed.reference})`,
+                      checkIn: bookingConfirmed.checkIn,
+                      checkOut: bookingConfirmed.checkOut,
+                      guests,
+                      totalAmount: bookingConfirmed.totalPrice
+                    });
+                    if (res.configured && res.url) {
+                      window.open(res.url, '_blank', 'noopener,noreferrer');
+                    } else {
+                      alert(res.errorMessage || 'Room Booking WhatsApp recipient is not configured in Admin Settings. Please call +91 94334 24718.');
+                    }
+                  }}
+                >
+                  <MessageCircle size={18} />
+                  <span>Send Details to WhatsApp</span>
+                </button>
+
+                <button className="btn-primary" onClick={() => setBookingConfirmed(null)}>
+                  <span>Book Another Room</span>
+                </button>
+              </div>
             </div>
           )}
         </div>

@@ -11,9 +11,12 @@ import {
 } from 'lucide-react';
 import { RESORT_INFO, FAQS } from '../data/lodgeData';
 import { sendContactMessage } from '../lib/supabaseClient';
+import { contactRoutingService } from '../services/contactRoutingService';
+import { useHotelSettings } from '../context/HotelSettingsContext';
 import './Contact.css';
 
 export default function ContactSection() {
+  const { hotelSettings } = useHotelSettings();
   const [openFaq, setOpenFaq] = useState(0);
 
   // Form State
@@ -68,31 +71,31 @@ export default function ContactSection() {
           <div className="loc-card">
             <MapPin size={24} className="text-terracotta" />
             <h4>Our Address</h4>
-            <p className="loc-primary">{RESORT_INFO.address}</p>
-            <p className="loc-secondary">{RESORT_INFO.city}, {RESORT_INFO.state} — {RESORT_INFO.pincode}</p>
+            <p className="loc-primary">{hotelSettings.display_locality || "Near Kamarpukur, West Bengal"}</p>
+            <p className="loc-secondary">{hotelSettings.travel_time_description || (hotelSettings.landmark_1 ? `Near ${hotelSettings.landmark_1}` : "Conveniently located near Kamarpukur’s key landmarks")}</p>
           </div>
           <div className="loc-card">
             <Phone size={24} className="text-terracotta" />
             <h4>Phone & WhatsApp</h4>
-            <p className="loc-primary">{RESORT_INFO.phone}</p>
+            <p className="loc-primary">{hotelSettings.phone || RESORT_INFO.phone}</p>
             <p className="loc-secondary">Available 24 hours</p>
           </div>
           <div className="loc-card">
             <Mail size={24} className="text-terracotta" />
             <h4>Email Us</h4>
-            <p className="loc-primary">{RESORT_INFO.reservationsEmail}</p>
-            <p className="loc-secondary">{RESORT_INFO.email}</p>
+            <p className="loc-primary">{hotelSettings.email || RESORT_INFO.reservationsEmail}</p>
+            <p className="loc-secondary">Front Desk & Reservations</p>
           </div>
         </div>
 
         <div className="checkin-strip">
           <div className="checkin-item">
             <Clock size={18} className="text-gold" />
-            <span><strong>Check-In:</strong> {RESORT_INFO.checkInTime}</span>
+            <span><strong>Check-In:</strong> {hotelSettings.timings?.checkIn || hotelSettings.check_in_time || RESORT_INFO.checkInTime}</span>
           </div>
           <div className="checkin-item">
             <Clock size={18} className="text-gold" />
-            <span><strong>Check-Out:</strong> {RESORT_INFO.checkOutTime}</span>
+            <span><strong>Check-Out:</strong> {hotelSettings.timings?.checkOut || hotelSettings.check_out_time || RESORT_INFO.checkOutTime}</span>
           </div>
         </div>
 
@@ -106,18 +109,18 @@ export default function ContactSection() {
                 <div className="form-row-2">
                   <div className="input-group">
                     <label>Your Name *</label>
-                    <input type="text" required placeholder="e.g. Subir Ghosh" value={name} onChange={(e) => setName(e.target.value)} />
+                    <input type="text" required placeholder="Enter your full name" value={name} onChange={(e) => setName(e.target.value)} />
                   </div>
                   <div className="input-group">
                     <label>Email Address *</label>
-                    <input type="email" required placeholder="yourname@email.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <input type="email" required placeholder="Enter your email address" value={email} onChange={(e) => setEmail(e.target.value)} />
                   </div>
                 </div>
 
                 <div className="form-row-2">
                   <div className="input-group">
                     <label>Phone / WhatsApp</label>
-                    <input type="tel" placeholder="+91 98765 43210" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                    <input type="tel" placeholder="Enter your phone number" value={phone} onChange={(e) => setPhone(e.target.value)} />
                   </div>
                   <div className="input-group">
                     <label>Subject</label>
@@ -133,7 +136,7 @@ export default function ContactSection() {
 
                 <div className="input-group mb-4">
                   <label>Your Message *</label>
-                  <textarea rows={4} required placeholder="Tell us your preferred dates, number of guests, or special requirements..." value={message} onChange={(e) => setMessage(e.target.value)} />
+                  <textarea rows={4} required placeholder="Describe your enquiry" value={message} onChange={(e) => setMessage(e.target.value)} />
                 </div>
 
                 <div className="contact-form-actions flex flex-col gap-3">
@@ -141,14 +144,27 @@ export default function ContactSection() {
                     {isSubmitting ? <span>Sending...</span> : <><Send size={16} style={{marginRight: '8px'}} /> Send Enquiry</>}
                   </button>
                   <div className="flex gap-3">
-                    <a 
-                      href={`https://wa.me/${(RESORT_INFO.phone || '').replace(/[^0-9]/g, '')}`} 
-                      target="_blank" 
-                      rel="noreferrer" 
+                    <button 
+                      type="button"
+                      onClick={async () => {
+                        const res = await contactRoutingService.getGeneralWhatsAppAction({
+                          name: name || 'Website Visitor',
+                          phone,
+                          email,
+                          subject,
+                          message: message || 'Hello Amontron Hotel and Restaurant, I would like to enquire about your services.'
+                        });
+                        if (res.configured && res.url) {
+                          window.open(res.url, '_blank', 'noopener,noreferrer');
+                        } else {
+                          alert(res.errorMessage || 'No WhatsApp recipient configured in Admin Settings. Please call +91 94334 24718.');
+                        }
+                      }}
                       className="btn-outline-gold flex-1 text-center py-2"
+                      style={{ cursor: 'pointer', background: 'transparent' }}
                     >
                       WhatsApp Us
-                    </a>
+                    </button>
                     <a 
                       href={`tel:${RESORT_INFO.phone}`} 
                       className="btn-outline-gold flex-1 text-center py-2"
@@ -179,7 +195,12 @@ export default function ContactSection() {
               {FAQS.map((faq, index) => {
                 const isOpen = openFaq === index;
                 const question = faq.question || faq.q;
-                const answer = faq.answer || faq.a;
+                let answer = faq.answer || faq.a;
+                if (question && question.toLowerCase().includes('check-in')) {
+                  const checkIn = hotelSettings.timings?.checkIn || hotelSettings.check_in_time || '12:00 PM';
+                  const checkOut = hotelSettings.timings?.checkOut || hotelSettings.check_out_time || '11:00 AM';
+                  answer = `Check-in is at ${checkIn} and check-out is at ${checkOut}. Early check-in and late check-out can be arranged subject to availability.`;
+                }
                 return (
                   <div key={index} className={`faq-item ${isOpen ? 'faq-item-open' : ''}`}>
                     <button className="faq-question-btn" onClick={() => toggleFaq(index)}>

@@ -2,10 +2,14 @@ import React from 'react';
 import { Phone, MessageCircle, Mail, Sun, Moon } from 'lucide-react';
 import { HOTEL_INFO } from '../config/hotelInfo';
 import { useTheme } from '../context/ThemeContext';
+import { useHotelSettings } from '../context/HotelSettingsContext';
+import { contactRoutingService } from '../services/contactRoutingService';
 import './TopContactBar.css';
 
 export default function TopContactBar() {
   const { theme, isDay, toggleTheme, isAuto } = useTheme();
+  const { hotelSettings } = useHotelSettings();
+  const info = hotelSettings || HOTEL_INFO;
 
   return (
     <div className="top-contact-bar">
@@ -14,30 +18,40 @@ export default function TopContactBar() {
         {/* Hotel Identity Left */}
         <div className="top-hotel-title">
           <span className="brand-dot" />
-          <span>{HOTEL_INFO.fullName}</span>
-          <span className="top-location-badge">• {HOTEL_INFO.address.city}, {HOTEL_INFO.address.state}</span>
+          <span>{info.fullName || info.hotel_name || 'Amontron Hotel and Restaurant'}</span>
+          <span className="top-location-badge">• {info.display_locality || 'Near Kamarpukur, West Bengal'}</span>
         </div>
 
         {/* Quick Contact Actions Right */}
         <div className="top-actions-right">
           
-          <a href={`tel:${HOTEL_INFO.phone}`} className="top-contact-link">
+          <a href={`tel:${info.phone}`} className="top-contact-link">
             <Phone size={13} className="top-icon" />
             <span className="top-link-label">Call:</span>
-            <span className="top-link-val">{HOTEL_INFO.phoneDisplay}</span>
+            <span className="top-link-val">{info.phoneDisplay || info.phone}</span>
           </a>
 
           <span className="top-divider">|</span>
 
-          <a 
-            href={`https://wa.me/${HOTEL_INFO.whatsapp}?text=Hello%20Amontron%20Hotel,%20I%20would%20like%20to%20enquire%20about%20a%20room.`} 
-            target="_blank" 
-            rel="noopener noreferrer" 
+          <button 
+            type="button"
+            onClick={async () => {
+              const res = await contactRoutingService.getGeneralWhatsAppAction({
+                name: 'Website Visitor',
+                message: 'Hello Amontron Hotel and Restaurant, I would like to enquire about your services.'
+              });
+              if (res.configured && res.url) {
+                window.open(res.url, '_blank', 'noopener,noreferrer');
+              } else {
+                alert(res.errorMessage || 'No WhatsApp recipient configured in Admin Settings. Please call +91 94334 24718.');
+              }
+            }}
             className="top-contact-link top-whatsapp"
+            style={{ background: 'transparent', border: 'none', cursor: 'pointer', font: 'inherit', color: 'inherit' }}
           >
             <MessageCircle size={13} className="top-icon" />
             <span className="top-link-label">WhatsApp</span>
-          </a>
+          </button>
 
           <span className="top-divider">|</span>
 

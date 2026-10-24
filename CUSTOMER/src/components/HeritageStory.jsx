@@ -48,7 +48,7 @@ export default function HeritageStory() {
             
             <p className="story-lead-p">
               AMONTRON HOTEL &amp; RESTAURANT was founded on a simple belief — that every guest deserves a 
-              welcoming, comfortable, and memorable stay. Located in the heart of Kamarpukur, we have served 
+              welcoming, comfortable, and memorable stay. Located near Kamarpukur, West Bengal, we have served 
               thousands of business travellers, families, and tourists with genuine warmth and professional care.
             </p>
 

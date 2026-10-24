@@ -1,13 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Users, BedDouble, ArrowRight } from 'lucide-react';
-import { ROOM_TYPES } from '../data/hotelData';
+import { ROOM_TYPES as FALLBACK_ROOM_TYPES } from '../data/hotelData';
+import { getAllRoomTypes } from '../lib/roomService';
 import './FloatingBookingBar.css';
 
 export default function FloatingBookingBar({ onCheckAvailability, defaultRoomId }) {
-  const [selectedRoomId, setSelectedRoomId] = useState(defaultRoomId || ROOM_TYPES[0].id);
+  const [roomTypes, setRoomTypes] = useState(FALLBACK_ROOM_TYPES);
+  const [selectedRoomId, setSelectedRoomId] = useState(defaultRoomId || FALLBACK_ROOM_TYPES[0].id);
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [guests, setGuests] = useState('2');
+
+  useEffect(() => {
+    async function loadLiveRooms() {
+      try {
+        const res = await getAllRoomTypes();
+        if (res && res.data && res.data.length > 0) {
+          setRoomTypes(res.data);
+          if (!defaultRoomId) {
+            setSelectedRoomId(res.data[0].id);
+          }
+        }
+      } catch (e) {
+        console.warn('Could not load live rooms in FloatingBookingBar:', e);
+      }
+    }
+    loadLiveRooms();
+  }, [defaultRoomId]);
 
   // Initialize dates: tomorrow & 2 days later
   useEffect(() => {
@@ -40,7 +59,7 @@ export default function FloatingBookingBar({ onCheckAvailability, defaultRoomId 
       alert('Check-out date must be later than check-in date.');
       return;
     }
-    const selectedRoom = ROOM_TYPES.find(r => r.id === selectedRoomId) || ROOM_TYPES[0];
+    const selectedRoom = roomTypes.find(r => r.id === selectedRoomId) || roomTypes[0];
     onCheckAvailability({
       room_id: selectedRoom.id,
       room_name: selectedRoom.name,
@@ -77,9 +96,9 @@ export default function FloatingBookingBar({ onCheckAvailability, defaultRoomId 
               value={selectedRoomId}
               onChange={(e) => setSelectedRoomId(e.target.value)}
             >
-              {ROOM_TYPES.map((r) => (
+              {roomTypes.map((r) => (
                 <option key={r.id} value={r.id}>
-                  {r.name} (₹{r.price.toLocaleString()}/night)
+                  {r.name} (₹{(r.price || r.pricePerNight || 0).toLocaleString()}/night)
                 </option>
               ))}
             </select>

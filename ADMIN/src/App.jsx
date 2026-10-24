@@ -15,9 +15,13 @@ import RoomsManagement from './pages/admin/RoomsManagement';
 import MenuManagement from './pages/admin/MenuManagement';
 import BillHistoryPage from './pages/admin/BillHistoryPage';
 import HotelSettingsPage from './pages/admin/HotelSettingsPage';
+import MonthlyFinancialReportPage from './pages/admin/MonthlyFinancialReportPage';
+import CustomersPage from './pages/admin/CustomersPage';
+import DataManagementPage from './pages/admin/DataManagementPage';
+import InvoiceView from './pages/staff/InvoiceView';
 
 // Icons
-import { LayoutDashboard, BedDouble, Receipt, Settings, LogOut, DollarSign, CalendarCheck, Menu, X } from 'lucide-react';
+import { LayoutDashboard, BedDouble, Receipt, Settings, LogOut, DollarSign, CalendarCheck, TrendingUp, Menu, X, Users, Database } from 'lucide-react';
 
 const AdminSidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
@@ -26,8 +30,11 @@ const AdminSidebar = ({ isOpen, onClose }) => {
   const menu = [
     { name: 'Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard size={20}/> },
     { name: 'Bookings', path: '/admin/bookings', icon: <CalendarCheck size={20}/> },
+    { name: 'Monthly Financials', path: '/admin/financial-report', icon: <TrendingUp size={20}/> },
     { name: 'Sales Report', path: '/admin/sales', icon: <DollarSign size={20}/> },
     { name: 'Expense Report', path: '/admin/expenses', icon: <DollarSign size={20}/> },
+    { name: 'Guests & Customers', path: '/admin/customers', icon: <Users size={20}/> },
+    { name: 'Data Management', path: '/admin/data-management', icon: <Database size={20}/> },
     { name: 'Manage Rooms', path: '/admin/rooms', icon: <BedDouble size={20}/> },
     { name: 'Manage Menu', path: '/admin/menu', icon: <Receipt size={20}/> },
     { name: 'Hotel Settings', path: '/admin/settings', icon: <Settings size={20}/> },
@@ -39,7 +46,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
       <aside className={`sidebar ${isOpen ? 'open' : ''}`} style={{ background: '#1e293b' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem 1rem 0.5rem 1rem' }}>
           <div className="sidebar-logo" style={{ color: 'white', padding: 0, border: 'none', fontSize: '1.1rem', fontWeight: 800 }}>
-            Amontron Hotel
+            Amontron Hotel and Restaurant
           </div>
           <button 
             type="button" 
@@ -95,7 +102,7 @@ const AdminLayout = ({ children }) => {
         >
           <Menu size={24} />
         </button>
-        <div className="mobile-bar-title">Amontron Hotel & Restaurant</div>
+        <div className="mobile-bar-title">Amontron Hotel and Restaurant</div>
         <div style={{ width: 44 }}></div>
       </header>
 
@@ -134,10 +141,14 @@ export default function App() {
               <Routes>
                 <Route path="dashboard" element={<AdminDashboard />} />
                 <Route path="bookings" element={<BookingsManagement />} />
+                <Route path="financial-report" element={<MonthlyFinancialReportPage />} />
                 <Route path="sales" element={<BillHistoryPage />} />
                 <Route path="expenses" element={<ExpensesPage />} />
                 <Route path="rooms" element={<RoomsManagement />} />
                 <Route path="menu" element={<MenuManagement />} />
+                <Route path="customers" element={<CustomersPage />} />
+                <Route path="data-management" element={<DataManagementPage />} />
+                <Route path="invoice/:billId" element={<InvoiceView />} />
                 <Route path="settings" element={<HotelSettingsPage />} />
               </Routes>
             </AdminLayout></ProtectedRoute>} />

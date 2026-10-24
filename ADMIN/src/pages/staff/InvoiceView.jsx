@@ -1,28 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { billingService } from '../../services/billingService';
-import { Printer, ArrowRight, ArrowLeft } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
+import { Printer, ArrowLeft, RefreshCw } from 'lucide-react';
 
 export default function InvoiceView() {
   const { billId } = useParams();
   const navigate = useNavigate();
   
   const [bill, setBill] = useState(null);
+  const [hotelSettings, setHotelSettings] = useState(null);
   const [loading, setLoading] = useState(true);
   const [paperWidth, setPaperWidth] = useState('80mm'); // '80mm' or '58mm'
 
   useEffect(() => {
-    async function loadBill() {
+    async function loadBillAndHotel() {
       try {
-        const data = await billingService.getBillDetails(billId);
-        setBill(data);
+        setLoading(true);
+        const [billData, hotelRes] = await Promise.all([
+          billingService.getBillDetails(billId),
+          supabase.from('hotel_settings').select('*').order('updated_at', { ascending: false }).limit(1).maybeSingle()
+        ]);
+        setBill(billData);
+        if (hotelRes?.data) {
+          setHotelSettings(hotelRes.data);
+        }
       } catch (err) {
         console.error('[InvoiceView] Error loading bill:', err);
       } finally {
         setLoading(false);
       }
     }
-    loadBill();
+    loadBillAndHotel();
   }, [billId]);
 
   const handlePrint = () => {
@@ -32,7 +41,8 @@ export default function InvoiceView() {
   if (loading) {
     return (
       <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-        Loading Invoice...
+        <RefreshCw size={32} className="animate-spin" style={{ margin: '0 auto 1rem auto', opacity: 0.7 }} />
+        <p>Loading Invoice &amp; Receipt Data...</p>
       </div>
     );
   }
@@ -41,7 +51,10 @@ export default function InvoiceView() {
     return (
       <div style={{ padding: '3rem', textAlign: 'center' }}>
         <h2>Invoice Not Found</h2>
-        <button className="btn btn-outline" onClick={() => navigate('/admin/sales')} style={{ marginTop: '1rem' }}>
+        <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+          Could not locate invoice record with ID: {billId}
+        </p>
+        <button className="btn btn-outline" onClick={() => navigate('/admin/sales')}>
           Back to Sales
         </button>
       </div>
@@ -55,15 +68,44 @@ export default function InvoiceView() {
   const tax = Number(bill.tax_amount || 0);
   const advance = Number(bill.advance_amount || 0);
   const finalTotal = Number(bill.total_amount || 0);
-  const isPaid = bill.payment_status === 'paid';
-  const balanceDue = isPaid ? 0 : Math.max(0, finalTotal);
+
+  // Sum payments made from payments table
+  const totalPaidThroughPayments = (bill.payments || []).reduce((sum, p) => sum + Number(p.amount || 0), 0);
+  const isPaid = bill.payment_status === 'paid' || totalPaidThroughPayments >= finalTotal;
+  
+  const totalAmountReceived = isPaid 
+    ? Math.max(finalTotal, totalPaidThroughPayments)
+    : (totalPaidThroughPayments > 0 ? totalPaidThroughPayments : advance);
+
+  const balanceDue = isPaid ? 0 : Math.max(0, finalTotal - totalAmountReceived);
+
+  // Format date and time
+  const billDate = bill.created_at ? new Date(bill.created_at) : new Date();
+  const dateFormatted = billDate.toLocaleDateString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  });
+  const timeFormatted = billDate.toLocaleTimeString('en-IN', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
+
+  // Hotel Business Details from settings or official business configuration
+  const businessName = hotelSettings?.hotel_name || 'Amontron Hotel and Restaurant';
+  const businessAddress = hotelSettings?.address 
+    ? `${hotelSettings.address}${hotelSettings.city ? ', ' + hotelSettings.city : ''}${hotelSettings.pin_code ? ' - ' + hotelSettings.pin_code : ''}`
+    : 'WM55+6MH, Dasghara, West Bengal - 712612';
+  const businessPhone = hotelSettings?.phone || '+91 94334 24718';
+  const businessEmail = hotelSettings?.email || 'amontronhotelandrestaurant@gmail.com';
 
   return (
     <div className="invoice-screen-wrapper">
-      {/* ACTIONS BAR - HIDDEN IN PRINT */}
+      {/* ACTIONS BAR - STRICTLY HIDDEN IN PRINT */}
       <div className="actions-bar no-print">
-        <button className="btn btn-outline" onClick={() => navigate(-1)}>
-          <ArrowLeft size={16} /> Back
+        <button className="btn btn-outline" onClick={() => navigate('/admin/sales')}>
+          <ArrowLeft size={16} /> Back to Sales
         </button>
         
         {/* Paper Size Toggle */}
@@ -107,83 +149,120 @@ export default function InvoiceView() {
         </button>
       </div>
 
-      {/* THERMAL RECEIPT CONTAINER */}
+      {/* THERMAL RECEIPT CONTAINER — STRICT BLACK TEXT ON WHITE BACKGROUND ONLY */}
       <div 
         id="thermal-bill-container" 
         className={`thermal-receipt ${paperWidth === '58mm' ? 'width-58mm' : 'width-80mm'}`}
       >
-        {/* HEADER */}
+        {/* OFFICIAL BUSINESS HEADER */}
         <div className="receipt-header">
-          <h2 style={{ margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            Amontron Hotel and Restaurant
+          <h2 className="receipt-hotel-title">
+            {businessName}
           </h2>
-          <p style={{ margin: '0.2rem 0', fontSize: '0.75rem' }}>123 Highway Road, Cityville</p>
-          <p style={{ margin: '0.2rem 0', fontSize: '0.75rem' }}>Phone: +91 94334 24718</p>
-          <p style={{ margin: '0.2rem 0', fontSize: '0.7rem', color: '#333' }}>
-            amontronhotelandrestaurant@gmail.com
-          </p>
+          <p className="receipt-info-text">{businessAddress}</p>
+          <p className="receipt-info-text">Phone: {businessPhone}</p>
+          <p className="receipt-info-text">{businessEmail}</p>
         </div>
         
-        <div className="receipt-divider">================================</div>
+        <div className="receipt-divider">--------------------------------</div>
         
-        {/* METADATA */}
+        {/* INVOICE METADATA */}
         <div className="receipt-meta">
-          <p><span>Bill No:</span> <strong>{bill.invoice_number}</strong></p>
-          <p><span>Date:</span> <span>{new Date(bill.created_at).toLocaleDateString()}</span></p>
-          <p><span>Time:</span> <span>{new Date(bill.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span></p>
+          <div className="receipt-meta-row">
+            <span>Invoice No:</span>
+            <strong>{bill.invoice_number}</strong>
+          </div>
+          <div className="receipt-meta-row">
+            <span>Date:</span>
+            <span>{dateFormatted}</span>
+          </div>
+          <div className="receipt-meta-row">
+            <span>Time:</span>
+            <span>{timeFormatted}</span>
+          </div>
         </div>
         
         <div className="receipt-divider">--------------------------------</div>
         
-        {/* GUEST & ROOM INFO */}
+        {/* CUSTOMER & STAY / COUNTER DETAILS */}
         <div className="receipt-guest">
-          <p><span>Customer:</span> <strong>{guest?.full_name || 'Guest'}</strong></p>
-          {guest?.phone && <p><span>Phone:</span> <span>{guest.phone}</span></p>}
-          {booking?.rooms?.room_number ? (
-            <p><span>Room No:</span> <strong>Room {booking.rooms.room_number}</strong></p>
-          ) : (
-            <p><span>Service:</span> <span>Restaurant / Counter</span></p>
+          <div className="receipt-meta-row">
+            <span>Customer:</span>
+            <strong>{guest?.full_name || 'Walk-in Guest'}</strong>
+          </div>
+          {guest?.phone && (
+            <div className="receipt-meta-row">
+              <span>Phone:</span>
+              <span>{guest.phone}</span>
+            </div>
           )}
+          <div className="receipt-meta-row">
+            <span>Reference:</span>
+            <strong>
+              {booking?.rooms?.room_number 
+                ? `Room ${booking.rooms.room_number}` 
+                : 'Restaurant Counter'}
+            </strong>
+          </div>
           {booking && booking.check_in && (
-            <p><span>Stay Period:</span> <span>{booking.check_in} to {booking.check_out}</span></p>
+            <div className="receipt-meta-row">
+              <span>Stay:</span>
+              <span>{booking.check_in} to {booking.check_out}</span>
+            </div>
           )}
         </div>
 
-        <div className="receipt-divider">================================</div>
+        <div className="receipt-divider">--------------------------------</div>
         
-        {/* ITEMIZED TABLE */}
-        <table className="receipt-table">
-          <thead>
-            <tr>
-              <th style={{ textAlign: 'left', width: '46%' }}>ITEM</th>
-              <th style={{ textAlign: 'center', width: '16%' }}>QTY</th>
-              <th style={{ textAlign: 'right', width: '18%' }}>RATE</th>
-              <th style={{ textAlign: 'right', width: '20%' }}>TOTAL</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(bill.bill_items || []).map(item => (
-              <tr key={item.id}>
-                <td style={{ textAlign: 'left', wordBreak: 'break-word', paddingRight: '2px' }}>
-                  {item.item_name}
-                </td>
-                <td style={{ textAlign: 'center' }}>
-                  {item.quantity}
-                </td>
-                <td style={{ textAlign: 'right' }}>
-                  ₹{Number(item.unit_price || 0).toFixed(0)}
-                </td>
-                <td style={{ textAlign: 'right', fontWeight: 600 }}>
-                  ₹{Number(item.total_price || 0).toFixed(2)}
-                </td>
-              </tr>
+        {/* ITEMIZED TABLE / CHARGES */}
+        {paperWidth === '58mm' ? (
+          /* COMPACT 58mm STACKED LAYOUT (PREVENTS NARROW COLUMN CLIPPING) */
+          <div className="receipt-items-58mm">
+            {(bill.bill_items || []).map((item, idx) => (
+              <div key={item.id || idx} className="item-row-58mm">
+                <div className="item-name-58mm">{item.item_name}</div>
+                <div className="item-calc-58mm">
+                  <span>{item.quantity} × ₹{Number(item.unit_price || 0).toFixed(0)}</span>
+                  <strong>₹{Number(item.total_price || 0).toFixed(2)}</strong>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        ) : (
+          /* STANDARD 80mm ITEMIZED TABLE */
+          <table className="receipt-table">
+            <thead>
+              <tr>
+                <th style={{ textAlign: 'left', width: '48%' }}>ITEM</th>
+                <th style={{ textAlign: 'center', width: '14%' }}>QTY</th>
+                <th style={{ textAlign: 'right', width: '18%' }}>RATE</th>
+                <th style={{ textAlign: 'right', width: '20%' }}>TOTAL</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(bill.bill_items || []).map((item, idx) => (
+                <tr key={item.id || idx}>
+                  <td style={{ textAlign: 'left', wordBreak: 'break-word', paddingRight: '4px' }}>
+                    {item.item_name}
+                  </td>
+                  <td style={{ textAlign: 'center' }}>
+                    {item.quantity}
+                  </td>
+                  <td style={{ textAlign: 'right' }}>
+                    ₹{Number(item.unit_price || 0).toFixed(0)}
+                  </td>
+                  <td style={{ textAlign: 'right', fontWeight: 600 }}>
+                    ₹{Number(item.total_price || 0).toFixed(2)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
 
         <div className="receipt-divider">--------------------------------</div>
 
-        {/* FINANCIAL SUMMARY */}
+        {/* FINANCIAL SUMMARY — SUB, TAX, DISC, ADVANCE, TOTAL, DUE */}
         <div className="receipt-summary">
           <div className="receipt-row">
             <span>Subtotal:</span>
@@ -211,36 +290,40 @@ export default function InvoiceView() {
             </div>
           )}
 
+          <div className="receipt-divider">--------------------------------</div>
+
           <div className="receipt-total">
-            <span>TOTAL AMOUNT:</span>
+            <span>FINAL AMOUNT:</span>
             <span>₹{finalTotal.toFixed(2)}</span>
           </div>
 
-          <div className="receipt-row" style={{ marginTop: '0.35rem', fontWeight: 600 }}>
-            <span>Amount Paid:</span>
-            <span>₹{isPaid ? finalTotal.toFixed(2) : (advance > 0 ? advance.toFixed(2) : '0.00')}</span>
+          <div className="receipt-divider">--------------------------------</div>
+
+          <div className="receipt-row">
+            <span>Amount Received:</span>
+            <span>₹{totalAmountReceived.toFixed(2)}</span>
           </div>
 
-          <div className="receipt-row" style={{ fontWeight: 700, color: balanceDue > 0 ? '#b91c1c' : '#15803d' }}>
+          <div className="receipt-row bold-row">
             <span>Balance Due:</span>
             <span>₹{balanceDue.toFixed(2)}</span>
           </div>
         </div>
 
-        {/* PAYMENT STATUS BADGE */}
-        <div className={`receipt-status ${isPaid ? 'status-paid-box' : 'status-due-box'}`}>
-          STATUS: {bill.payment_status ? bill.payment_status.toUpperCase() : 'PENDING'}
+        {/* PAYMENT STATUS — STRICT BLACK AND WHITE TEXT ONLY */}
+        <div className="receipt-status-bw">
+          {isPaid 
+            ? '*** STATUS: FULLY PAID ***' 
+            : `*** STATUS: PAYMENT DUE (₹${balanceDue.toFixed(2)}) ***`}
         </div>
 
-        {/* FOOTER */}
+        {/* SHORT FOOTER — CLEAN WITHOUT REPEATED ADDRESS/PHONE */}
         <div className="receipt-footer">
-          <p style={{ fontWeight: 700, letterSpacing: '1px' }}>*** THANK YOU! VISIT AGAIN ***</p>
-          <p>Location: https://maps.app.goo.gl/rSui7ryM9LkorzYk6</p>
-          <p>For inquiries: +91 94334 24718</p>
+          <p className="footer-title">*** Thank you for visiting! ***</p>
         </div>
 
         <div className="receipt-cut-line">
-          ✂ - - - - - - - - - - - - - - - - - - - ✂
+          - - - - - - - - - - - - - - - - - - - - - - - - -
         </div>
       </div>
     </div>

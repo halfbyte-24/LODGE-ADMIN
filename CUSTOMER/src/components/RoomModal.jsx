@@ -11,8 +11,10 @@ import {
   Coffee, 
   ShieldCheck,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  MessageCircle
 } from 'lucide-react';
+import { contactRoutingService } from '../services/contactRoutingService';
 import './RoomModal.css';
 
 export default function RoomModal({ room, onClose, onSelectRoom }) {
@@ -172,6 +174,26 @@ export default function RoomModal({ room, onClose, onSelectRoom }) {
           <div className="modal-action-footer">
             <button className="btn-secondary" onClick={onClose}>
               Close Details
+            </button>
+            <button
+              type="button"
+              className="btn-outline-gold"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', cursor: 'pointer', background: 'transparent' }}
+              onClick={async () => {
+                const res = await contactRoutingService.getBookingWhatsAppAction({
+                  roomName: room.name,
+                  roomNumber: room.room_number,
+                  totalAmount: room.pricePerNight || room.price
+                });
+                if (res.configured && res.url) {
+                  window.open(res.url, '_blank', 'noopener,noreferrer');
+                } else {
+                  alert(res.errorMessage || 'Room Booking WhatsApp recipient is not configured in Admin Settings. Please call +91 94334 24718.');
+                }
+              }}
+            >
+              <MessageCircle size={16} />
+              <span>Enquire on WhatsApp</span>
             </button>
             <button 
               className="btn-primary" 

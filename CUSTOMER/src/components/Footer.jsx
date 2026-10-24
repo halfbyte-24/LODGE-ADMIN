@@ -2,11 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, Navigation } from 'lucide-react';
 import { HOTEL_INFO } from '../config/hotelInfo';
+import { useHotelSettings } from '../context/HotelSettingsContext';
 import './Footer.css';
 
 export default function Footer({ onOpenBooking }) {
-  // Clean phone number digits for tel and wa links
-  const phoneDigits = HOTEL_INFO.phone.replace(/[^0-9]/g, '');
+  const { hotelSettings } = useHotelSettings();
+  const info = hotelSettings || HOTEL_INFO;
+  const phoneDigits = (info.phone || HOTEL_INFO.phone).replace(/[^0-9]/g, '');
 
   return (
     <footer className="bengali-footer">
@@ -18,7 +20,7 @@ export default function Footer({ onOpenBooking }) {
           
           {/* COLUMN 1: AMONTRON Branding */}
           <div className="footer-col footer-brand-section">
-            <h2 className="footer-brand-name">{HOTEL_INFO.name}</h2>
+            <h2 className="footer-brand-name">{info.shortName || HOTEL_INFO.name}</h2>
             <div className="footer-brand-subtitle">HOTEL &amp; RESTAURANT</div>
             <Link
               to="/booking"
@@ -50,14 +52,14 @@ export default function Footer({ onOpenBooking }) {
                 <span className="contact-icon-col">
                   <MapPin size={17} className="contact-icon" />
                 </span>
-                <span className="contact-text">{HOTEL_INFO.address.full || "Near Kamarpukur Ramakrishna Math, Kamarpukur, West Bengal 712612, India"}</span>
+                <span className="contact-text">{info.display_locality || "Near Kamarpukur, West Bengal"}</span>
               </li>
               <li className="contact-item">
                 <span className="contact-icon-col">
                   <Phone size={17} className="contact-icon" />
                 </span>
                 <span className="contact-text">
-                  <a href={`tel:+${phoneDigits}`}>{HOTEL_INFO.phoneDisplay || HOTEL_INFO.phone}</a>
+                  <a href={`tel:+${phoneDigits}`}>{info.phoneDisplay || info.phone}</a>
                 </span>
               </li>
               <li className="contact-item">
@@ -65,7 +67,7 @@ export default function Footer({ onOpenBooking }) {
                   <Mail size={17} className="contact-icon" />
                 </span>
                 <span className="contact-text">
-                  <a href={`mailto:${HOTEL_INFO.email}`}>{HOTEL_INFO.email}</a>
+                  <a href={`mailto:${info.email}`}>{info.email}</a>
                 </span>
               </li>
             </ul>
@@ -76,8 +78,8 @@ export default function Footer({ onOpenBooking }) {
             <h3 className="footer-heading">Location Map</h3>
             <div className="footer-map-frame">
               <iframe
-                title="AMONTRON Hotel & Restaurant Location Map"
-                src="https://maps.google.com/maps?q=Kamarpukur,+West+Bengal,+India&hl=en&z=14&output=embed"
+                title="Amontron Hotel and Restaurant Location Map"
+                src={info.google_maps_embed_url || info.coordinates?.googleMapsEmbedUrl || "https://maps.google.com/maps?q=WM55%2B6MH%2C+Dasghara%2C+West+Bengal+722161&hl=en&z=15&output=embed"}
                 width="100%"
                 height="160"
                 style={{ border: 0 }}
@@ -87,7 +89,7 @@ export default function Footer({ onOpenBooking }) {
               />
             </div>
             <a
-              href={HOTEL_INFO.coordinates.googleMapsUrl}
+              href={info.google_maps_url || info.coordinates?.googleMapsUrl || "https://www.google.com/maps/search/?api=1&query=WM55%2B6MH%2C+Dasghara%2C+West+Bengal+722161"}
               target="_blank"
               rel="noopener noreferrer"
               className="footer-directions-link"

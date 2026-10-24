@@ -43,7 +43,7 @@ const StaffSidebar = ({ isOpen, onClose }) => {
       <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem 1rem 0.5rem 1rem' }}>
           <div className="sidebar-logo" style={{ padding: 0, border: 'none', fontSize: '1.1rem', fontWeight: 800 }}>
-            Amontron Hotel
+            Amontron Hotel and Restaurant
           </div>
           <button 
             type="button" 
@@ -98,7 +98,7 @@ const StaffLayout = ({ children }) => {
         >
           <Menu size={24} />
         </button>
-        <div className="mobile-bar-title">Amontron Hotel & Restaurant</div>
+        <div className="mobile-bar-title">Amontron Hotel and Restaurant</div>
         <div style={{ width: 44 }}></div>
       </header>
 

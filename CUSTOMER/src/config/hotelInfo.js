@@ -1,35 +1,39 @@
-// AMONTRON HOTEL & RESTAURANT - Configuration
+// AMONTRON HOTEL & RESTAURANT - Official Business Configuration
 // Single source of truth for hotel contact, location, and operational parameters
 
 export const HOTEL_INFO = {
-  name: "AMONTRON",
-  fullName: "AMONTRON HOTEL & RESTAURANT",
+  name: "Amontron",
+  fullName: "Amontron Hotel and Restaurant",
   tagline: "Comfort, hospitality and memorable moments",
-  subTagline: "Experience refined hospitality, luxurious comfort, and authentic culinary excellence.",
+  subTagline: "Experience refined hospitality, luxurious comfort, and authentic culinary excellence near Kamarpukur.",
   
-  // Contact details
-  phone: "+91 98765 43210",
-  phoneDisplay: "+91 98765 43210",
-  whatsapp: "+919876543210",
-  whatsappDisplay: "+91 98765 43210",
-  email: "reservations@amontronhotel.com",
-  frontDeskEmail: "info@amontronhotel.com",
+  // Official Business Contact Details
+  // Note: Owner phone number is official contact and separate from dynamic WhatsApp staff routing.
+  phone: "+91 94334 24718",
+  phoneDisplay: "+91 94334 24718",
+  email: "amontronhotelandrestaurant@gmail.com",
+  frontDeskEmail: "amontronhotelandrestaurant@gmail.com",
 
-  // Location details
+  // Location details — Customer-facing display near Kamarpukur
   address: {
-    line1: "Near Kamarpukur Ramakrishna Math",
-    city: "Kamarpukur",
+    line1: "Near Kamarpukur",
+    city: "Near Kamarpukur",
+    locality: "Near Kamarpukur, West Bengal",
+    display: "Near Kamarpukur, West Bengal",
     state: "West Bengal",
-    pincode: "712612",
+    pincode: "722161",
     country: "India",
-    full: "Near Kamarpukur Ramakrishna Math, Kamarpukur, West Bengal 712612, India"
+    full: "Near Kamarpukur, West Bengal",
+    // Official navigation & physical address (preserved for accurate navigation)
+    physicalAddress: "WM55+6MH, Dasghara, West Bengal 722161"
   },
   
-  // Coordinates for maps & directions (Kamarpukur: ~22.8988, 87.6534)
+  // Coordinates & Maps links
   coordinates: {
-    latitude: 22.8988,
-    longitude: 87.6534,
-    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Kamarpukur,+West+Bengal,+India"
+    latitude: 22.9868,
+    longitude: 87.9796,
+    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=WM55%2B6MH%2C+Dasghara%2C+West+Bengal+722161",
+    googleMapsEmbedUrl: "https://maps.google.com/maps?q=WM55%2B6MH%2C+Dasghara%2C+West+Bengal+722161&hl=en&z=15&output=embed"
   },
 
   // Operational Timings

@@ -81,7 +81,7 @@ export default function ManageBookingsModal({ isOpen, onClose }) {
               <Search size={18} className="search-icon" />
               <input 
                 type="text" 
-                placeholder="Enter booking reference (e.g. AMN-88219) or email"
+                placeholder="Enter booking reference or email address"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 className="search-input"

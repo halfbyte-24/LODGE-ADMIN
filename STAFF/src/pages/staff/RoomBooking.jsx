@@ -2,7 +2,8 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { roomService } from '../../services/roomService';
 import { useAuth } from '../../context/AuthContext';
-import { BedDouble, Check, X, Calendar, AlertCircle, RefreshCw, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { useStore } from '../../context/StoreContext';
+import { BedDouble, Check, X, Calendar, AlertCircle, RefreshCw, CheckCircle2, ShieldAlert, Clock } from 'lucide-react';
 
 const formatLocalDate = (d) => {
   const y = d.getFullYear();
@@ -12,6 +13,7 @@ const formatLocalDate = (d) => {
 };
 
 export default function RoomBooking() {
+  const { hotelConfig } = useStore();
   const { customerId } = useParams();
   const { profile } = useAuth();
   const navigate = useNavigate();
@@ -197,9 +199,14 @@ export default function RoomBooking() {
 
       {/* DATE RANGE CONTROLS (ALWAYS VISIBLE TO INFLUENCE AVAILABILITY) */}
       <div className="card" style={{ padding: '1.25rem', marginBottom: '1.5rem', background: '#f8fafc' }}>
-        <h3 style={{ fontSize: '0.95rem', fontWeight: 700, margin: '0 0 0.75rem 0', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <Calendar size={16} /> Stay Dates &amp; Occupancy
-        </h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.75rem' }}>
+          <h3 style={{ fontSize: '0.95rem', fontWeight: 700, margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <Calendar size={16} /> Stay Dates &amp; Occupancy
+          </h3>
+          <span style={{ fontSize: '0.78rem', color: '#475569', background: '#e2e8f0', padding: '3px 8px', borderRadius: '4px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+            <Clock size={12} /> Standard Policy: In from {hotelConfig?.checkInTime || '12:00 PM'} • Out by {hotelConfig?.checkOutTime || '11:00 AM'}
+          </span>
+        </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', alignItems: 'end' }}>
           <div className="input-group">
             <label className="input-label" style={{ fontSize: '0.8rem', fontWeight: 600 }}>Check-in Date *</label>

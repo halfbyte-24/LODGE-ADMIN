@@ -87,7 +87,7 @@ export default function EventsPage({ onOpenBooking }) {
                     <input 
                       type="text" 
                       required 
-                      placeholder="e.g. Subrata Mukherjee" 
+                      placeholder="Enter your full name" 
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                     />
@@ -98,7 +98,7 @@ export default function EventsPage({ onOpenBooking }) {
                       <input 
                         type="tel" 
                         required 
-                        placeholder="+91 98765 43210" 
+                        placeholder="Enter your phone number" 
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                       />

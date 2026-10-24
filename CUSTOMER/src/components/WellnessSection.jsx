@@ -12,6 +12,7 @@ import {
   ArrowRight,
   Check
 } from 'lucide-react';
+import { useHotelSettings } from '../context/HotelSettingsContext';
 import './Wellness.css';
 
 const FACILITY_GROUPS = [
@@ -48,6 +49,7 @@ const FACILITY_GROUPS = [
 ];
 
 export default function WellnessSection({ onOpenBooking }) {
+  const { hotelSettings } = useHotelSettings();
   return (
     <section id="facilities" className="wellness-section">
       <div className="section-wrapper">
@@ -100,8 +102,8 @@ export default function WellnessSection({ onOpenBooking }) {
 
           <div className="treatments-list" style={{ paddingTop: '1rem' }}>
             {[
-              { label: 'Check-In Time', value: '12:00 PM (Noon)' },
-              { label: 'Check-Out Time', value: '11:00 AM' },
+              { label: 'Check-In Time', value: hotelSettings.timings?.checkIn || hotelSettings.check_in_time || '12:00 PM' },
+              { label: 'Check-Out Time', value: hotelSettings.timings?.checkOut || hotelSettings.check_out_time || '11:00 AM' },
               { label: 'Cancellation Policy', value: 'Free cancellation 48 hours before check-in' },
               { label: 'Payment', value: 'Cash, UPI, Card — pay at property' },
             ].map((row, i) => (

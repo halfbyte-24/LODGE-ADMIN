@@ -19,9 +19,11 @@ import {
 import confetti from 'canvas-confetti';
 import { ROOMS, VIP_ENHANCEMENTS, RESORT_INFO } from '../data/lodgeData';
 import { createBooking } from '../lib/bookingService';
+import { useHotelSettings } from '../context/HotelSettingsContext';
 import './BookingModal.css';
 
 export default function BookingModal({ isOpen, onClose, initialData = {} }) {
+  const { hotelSettings } = useHotelSettings();
 
   // Multi-step: 1 = Dates/Room, 2 = Guests & VIP, 3 = Guest Info, 4 = Confirmation
   const [step, setStep] = useState(1);
@@ -238,7 +240,7 @@ export default function BookingModal({ isOpen, onClose, initialData = {} }) {
 
             <div className="nights-badge">
               <Clock size={14} />
-              <span>{nights} {nights === 1 ? 'Night' : 'Nights'} Selected ({checkIn} to {checkOut})</span>
+              <span>{nights} {nights === 1 ? 'Night' : 'Nights'} Selected ({checkIn} to {checkOut}) • Policy: In from {hotelSettings.timings?.checkIn || hotelSettings.check_in_time || '12:00 PM'}, Out by {hotelSettings.timings?.checkOut || hotelSettings.check_out_time || '11:00 AM'}</span>
             </div>
 
             {/* Room selection list */}
@@ -401,7 +403,7 @@ export default function BookingModal({ isOpen, onClose, initialData = {} }) {
                 <input 
                   type="text"
                   required
-                  placeholder="e.g. Rahul Sharma"
+                  placeholder="Enter your full name"
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
                   className="booking-input"
@@ -413,7 +415,7 @@ export default function BookingModal({ isOpen, onClose, initialData = {} }) {
                 <input 
                   type="email"
                   required
-                  placeholder="e.g. vivienne@hastings.com"
+                  placeholder="Enter your email address"
                   value={guestEmail}
                   onChange={(e) => setGuestEmail(e.target.value)}
                   className="booking-input"
@@ -427,7 +429,7 @@ export default function BookingModal({ isOpen, onClose, initialData = {} }) {
                 <input 
                   type="tel"
                   required
-                  placeholder="+91 98765 43210"
+                  placeholder="Enter your phone number"
                   value={guestPhone}
                   onChange={(e) => setGuestPhone(e.target.value)}
                   className="booking-input"
@@ -438,7 +440,7 @@ export default function BookingModal({ isOpen, onClose, initialData = {} }) {
                 <label className="input-label">Special Preferences & Dietary</label>
                 <input 
                   type="text"
-                  placeholder="Pillow preference, allergies, arrival time"
+                  placeholder="Describe your enquiry or special requests"
                   value={specialRequests}
                   onChange={(e) => setSpecialRequests(e.target.value)}
                   className="booking-input"
@@ -564,6 +566,14 @@ export default function BookingModal({ isOpen, onClose, initialData = {} }) {
               <div className="confirm-item">
                 <span className="label">Dates:</span>
                 <strong>{confirmedBooking.check_in} to {confirmedBooking.check_out} ({confirmedBooking.nights} Nights)</strong>
+              </div>
+              <div className="confirm-item">
+                <span className="label">Check-in Policy:</span>
+                <strong>From {hotelSettings.timings?.checkIn || hotelSettings.check_in_time || '12:00 PM'}</strong>
+              </div>
+              <div className="confirm-item">
+                <span className="label">Check-out Policy:</span>
+                <strong>By {hotelSettings.timings?.checkOut || hotelSettings.check_out_time || '11:00 AM'}</strong>
               </div>
               <div className="confirm-item">
                 <span className="label">Guests:</span>

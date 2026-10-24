@@ -3,23 +3,25 @@
 // ============================================================
 
 export const HOTEL_INFO = {
-  name: "AMONTRON HOTEL & RESTAURANT",
-  shortName: "AMONTRON",
-  tagline: "Comfort. Hospitality. Convenience.",
+  name: "Amontron Hotel and Restaurant",
+  shortName: "Amontron",
+  tagline: "Comfort, hospitality and memorable moments",
   description:
-    "Experience warm hospitality and modern comfort at AMONTRON HOTEL & RESTAURANT. Ideally located with thoughtfully designed rooms, excellent dining, and attentive service — we make every stay memorable.",
-  address: "Near Kamarpukur Ramakrishna Math, Main Road",
+    "Experience warm hospitality and modern comfort at Amontron Hotel and Restaurant. Ideally located near Kamarpukur with thoughtfully designed rooms, excellent dining, and attentive service — we make every stay memorable.",
+  address: "Near Kamarpukur, West Bengal",
   city: "Kamarpukur",
   state: "West Bengal",
-  pincode: "712612",
-  phone: "+91 98765 43210",
-  whatsapp: "+91 98765 43210",
-  email: "info@amontronhotel.com",
-  reservationsEmail: "reservations@amontronhotel.com",
+  pincode: "722161",
+  phone: "+91 94334 24718",
+  whatsapp: "+91 94334 24718",
+  email: "amontronhotelandrestaurant@gmail.com",
+  reservationsEmail: "amontronhotelandrestaurant@gmail.com",
   checkInTime: "12:00 PM",
   checkOutTime: "11:00 AM",
   mapEmbedUrl:
-    "https://maps.google.com/maps?q=Kamarpukur,+West+Bengal,+India&hl=en&z=14&output=embed",
+    "https://maps.google.com/maps?q=WM55%2B6MH%2C+Dasghara%2C+West+Bengal+722161&hl=en&z=15&output=embed",
+  googleMapsUrl:
+    "https://www.google.com/maps/search/?api=1&query=WM55%2B6MH%2C+Dasghara%2C+West+Bengal+722161",
   socialMedia: {
     facebook: "#",
     instagram: "#",

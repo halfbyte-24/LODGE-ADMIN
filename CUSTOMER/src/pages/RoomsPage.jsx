@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Wind } from 'lucide-react';
+import { Wind, MessageCircle, Clock } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import { PHYSICAL_ROOMS, ROOM_TYPES } from '../data/hotelData';
+import { contactRoutingService } from '../services/contactRoutingService';
+import { useHotelSettings } from '../context/HotelSettingsContext';
 import './RoomsPage.css';
 
 // Build authoritative list of all 9 rooms combining physical inventory and room type details
@@ -39,6 +41,9 @@ const FLOOR_FILTERS = [
 ];
 
 export default function RoomsPage({ onOpenBooking, onSelectRoom, onQuickView }) {
+  const { hotelSettings } = useHotelSettings();
+  const checkIn = hotelSettings.timings?.checkIn || hotelSettings.check_in_time || '12:00 PM';
+  const checkOut = hotelSettings.timings?.checkOut || hotelSettings.check_out_time || '11:00 AM';
   const [activeFloor, setActiveFloor] = useState('all');
   const [rooms, setRooms] = useState(() => buildAll9Rooms());
   const [loading, setLoading] = useState(false);
@@ -71,8 +76,8 @@ export default function RoomsPage({ onOpenBooking, onSelectRoom, onQuickView }) 
               name: `Room ${r.room_number} - ${r.room_type || typeInfo.name}`,
               shortName: `Room ${r.room_number}`,
               typeName: r.room_type || typeInfo.name,
-              price: r.price || r.price_per_night || typeInfo.price,
-              pricePerNight: r.price || r.price_per_night || typeInfo.price,
+              price: Number(r.price_per_night || r.price || typeInfo.price),
+              pricePerNight: Number(r.price_per_night || r.price || typeInfo.price),
               ac: r.ac !== undefined ? r.ac : true,
               acStatus: (r.ac !== undefined ? r.ac : true) ? 'AC Room' : 'Non-AC Room',
               status: r.status || 'available',
@@ -121,6 +126,10 @@ export default function RoomsPage({ onOpenBooking, onSelectRoom, onQuickView }) 
             Each floor offers three thoughtfully appointed, clean, and air-conditioned rooms. 
             Enjoy modern comforts, high-speed Wi-Fi, and 24/7 attentive Bengali hospitality.
           </p>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(197, 160, 89, 0.12)', border: '1px solid rgba(197, 160, 89, 0.3)', borderRadius: '30px', padding: '6px 18px', marginTop: '14px', fontSize: '0.88rem', color: 'var(--terracotta-dark, #8b3a2b)' }}>
+            <Clock size={16} style={{ color: '#c5a059' }} />
+            <span>Check-in: <strong>{checkIn}</strong> • Check-out: <strong>{checkOut}</strong></span>
+          </div>
         </div>
       </section>
 
@@ -179,7 +188,7 @@ export default function RoomsPage({ onOpenBooking, onSelectRoom, onQuickView }) 
                       <span className="price-unit">/ night</span>
                     </div>
 
-                    {/* Actions: Book Room + optional View Details */}
+                    {/* Actions: Book Room + optional View Details + WhatsApp */}
                     <div className="card-actions-row">
                       <button 
                         type="button"
@@ -193,7 +202,27 @@ export default function RoomsPage({ onOpenBooking, onSelectRoom, onQuickView }) 
                         className="btn-card-details" 
                         onClick={() => handleDetails(room)}
                       >
-                        View Details
+                        Details
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-card-details"
+                        style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '0.5rem', minWidth: '38px', color: '#16a34a' }}
+                        title="Enquire on WhatsApp"
+                        onClick={async () => {
+                          const res = await contactRoutingService.getBookingWhatsAppAction({
+                            roomName: room.name,
+                            roomNumber: room.room_number,
+                            totalAmount: room.price
+                          });
+                          if (res.configured && res.url) {
+                            window.open(res.url, '_blank', 'noopener,noreferrer');
+                          } else {
+                            alert(res.errorMessage || 'Room Booking WhatsApp recipient is not configured in Admin Settings. Please call +91 94334 24718.');
+                          }
+                        }}
+                      >
+                        <MessageCircle size={15} />
                       </button>
                     </div>
                   </div>

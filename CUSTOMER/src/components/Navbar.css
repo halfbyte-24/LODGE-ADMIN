@@ -226,7 +226,21 @@
 
 @media (max-width: 1024px) {
   .desktop-nav-menu { display: none; }
-  .mobile-hamburger-btn { display: block; }
-  .navbar-container { padding: 16px 20px; }
+  .mobile-hamburger-btn { 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .navbar-container { padding: 14px 18px; }
   .nav-book-btn { display: none; }
+}
+
+@media (max-width: 480px) {
+  .navbar-container { padding: 12px 14px; }
+  .brand-primary-name { font-size: 1.35rem; }
+  .brand-sub-title { font-size: 0.55rem; letter-spacing: 0.18em; }
+  .mobile-nav-drawer { width: 92%; }
+  .drawer-hotel-name { font-size: 1.35rem; }
 }

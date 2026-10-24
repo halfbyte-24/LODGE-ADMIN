@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const StoreContext = createContext();
 
@@ -23,17 +23,48 @@ const initialRooms = [
   { id: '306', floor: '3rd', type: 'Standard', price: 800, ac: false, maxGuests: 2, status: 'Available', wifi: true, bathroom: 'Attached' }
 ];
 
+import { supabase } from '../lib/supabase';
+
 export function StoreProvider({ children }) {
   const [hotelConfig, setHotelConfig] = useState({
     name: 'Amontron Hotel and Restaurant',
-    address: '123 Highway Road',
-    city: 'Cityville',
-    state: 'State',
-    pin: '12345',
+    address: 'WM55+6MH, Dasghara',
+    city: 'Dasghara',
+    state: 'West Bengal',
+    pin: '722161',
     phone: '+91 94334 24718',
     email: 'amontronhotelandrestaurant@gmail.com',
-    mapLink: 'https://maps.app.goo.gl/rSui7ryM9LkorzYk6?g_st=ac'
+    mapLink: 'https://www.google.com/maps/search/?api=1&query=WM55%2B6MH%2C+Dasghara%2C+West+Bengal+722161'
   });
+
+  useEffect(() => {
+    async function syncWithSupabase() {
+      try {
+        const { data } = await supabase
+          .from('hotel_settings')
+          .select('*')
+          .order('updated_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (data) {
+          setHotelConfig({
+            name: data.hotel_name || 'Amontron Hotel and Restaurant',
+            address: data.address || 'WM55+6MH, Dasghara',
+            city: data.city || 'Dasghara',
+            state: data.state || 'West Bengal',
+            pin: data.pin_code || '722161',
+            phone: data.phone || '+91 94334 24718',
+            email: data.email || 'amontronhotelandrestaurant@gmail.com',
+            mapLink: data.google_maps_url || 'https://www.google.com/maps/search/?api=1&query=WM55%2B6MH%2C+Dasghara%2C+West+Bengal+722161'
+          });
+        }
+      } catch (err) {
+        console.warn('[StoreContext] Supabase sync error:', err);
+      }
+    }
+    syncWithSupabase();
+  }, []);
 
   const [guests, setGuests] = useState([
     { id: 'g1', name: 'Rahul Das', phone: '9876543210', notes: 'VIP', isRoomGuest: true, room: '203', checkIn: '2026-09-28', checkOut: '2026-09-30', bookingId: 'BK-1024', status: 'Staying' },

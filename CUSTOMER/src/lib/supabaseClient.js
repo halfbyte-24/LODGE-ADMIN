@@ -149,22 +149,33 @@ export async function submitBookingRequest(bookingData) {
         room_rate: roomRate,
         room_total: roomTotal,
         booking_status: 'pending',
+        source: 'website',
         created_by: null
       });
     });
 
-    const { data: insertedData, error: bookingErr } = await supabase
+    const { error: bookingErr } = await supabase
       .from('bookings')
-      .insert(bookingRows)
-      .select();
+      .insert(bookingRows);
 
     if (bookingErr) {
       return { success: false, error: 'Booking insertion failed: ' + bookingErr.message };
     }
 
+    const returnData = {
+      ...bookingData,
+      booking_number: masterReference,
+      booking_code: masterReference,
+      reference_no: masterReference,
+      customer_id: customerId,
+      booking_status: 'pending',
+      source: 'website',
+      rooms: bookingRows
+    };
+
     return { 
       success: true, 
-      data: insertedData && insertedData.length === 1 ? insertedData[0] : insertedData,
+      data: returnData,
       reference_no: masterReference,
       source: 'supabase' 
     };

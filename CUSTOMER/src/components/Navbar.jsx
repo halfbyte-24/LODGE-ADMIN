@@ -80,7 +80,7 @@ export default function Navbar({ onOpenBookingModal, onOpenBooking }) {
           
           <Link to="/" className="navbar-brand" onClick={handleBrandClick}>
             <span className="brand-primary-name">{HOTEL_INFO.name}</span>
-            <span className="brand-sub-title">LODGE & RESTAURANT</span>
+            <span className="brand-sub-title">HOTEL & RESTAURANT</span>
           </Link>
 
           <nav className="desktop-nav-menu" aria-label="Main Navigation">
@@ -119,7 +119,7 @@ export default function Navbar({ onOpenBookingModal, onOpenBooking }) {
           <div className="mobile-drawer-header">
             <div>
               <div className="drawer-hotel-name">{HOTEL_INFO.name}</div>
-              <div className="drawer-hotel-sub">LODGE & RESTAURANT</div>
+              <div className="drawer-hotel-sub">HOTEL & RESTAURANT</div>
             </div>
             <button className="drawer-close-btn" onClick={() => setMobileMenuOpen(false)}>
               <X size={24} />

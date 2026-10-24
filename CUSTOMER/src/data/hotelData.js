@@ -5,7 +5,7 @@ export const HERO_SLIDES = [
   {
     id: "exterior",
     title: "AMONTRON HOTEL & RESTAURANT",
-    subtitle: "Comfort, hospitality and memorable moments in the heart of Kamarpukur",
+    subtitle: "Comfort, hospitality and memorable moments near Kamarpukur",
     tagline: "WELCOME TO",
     dayImage: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=2000&q=85",
     nightImage: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2000&q=85",
@@ -58,91 +58,109 @@ export const HERO_SLIDES = [
   }
 ];
 
-// 2. PHYSICAL ROOM INVENTORY (AUTHORITATIVE: 3 FLOORS x 3 ROOMS = 9 TOTAL ROOMS)
+// 2. PHYSICAL ROOM INVENTORY (AUTHORITATIVE: 3 FLOORS x 3 ROOMS = 9 TOTAL ROOMS IN SUPABASE)
 export const PHYSICAL_ROOMS = [
   // FLOOR 1
   {
-    id: "a1010000-0001-4000-8000-000000000101",
+    id: "5dcfaec1-0309-41d3-a5ff-ce22203b573a",
     room_number: "101",
     floor: 1,
     room_type_id: "standard-room",
-    price: 1899,
+    category: "Standard",
+    price: 500,
+    price_per_night: 500,
     status: "available",
     is_active: true
   },
   {
-    id: "a1020000-0001-4000-8000-000000000102",
+    id: "bbfb77d6-3e79-42b7-a36c-2f3b9c8ce8b1",
     room_number: "102",
     floor: 1,
     room_type_id: "standard-room",
-    price: 1899,
+    category: "Standard",
+    price: 800,
+    price_per_night: 800,
     status: "available",
     is_active: true
   },
   {
-    id: "a1030000-0001-4000-8000-000000000103",
+    id: "c231737e-66bf-42a9-b68c-db5103fc9157",
     room_number: "103",
     floor: 1,
-    room_type_id: "standard-room",
-    price: 1899,
+    room_type_id: "deluxe-room",
+    category: "Deluxe",
+    price: 1500,
+    price_per_night: 1500,
     status: "available",
     is_active: true
   },
 
   // FLOOR 2
   {
-    id: "b2010000-0002-4000-8000-000000000201",
+    id: "4fa450cb-ae5c-4eb2-9d0b-689d0b3f55d9",
     room_number: "201",
     floor: 2,
-    room_type_id: "deluxe-room",
-    price: 2499,
+    room_type_id: "standard-room",
+    category: "Standard",
+    price: 800,
+    price_per_night: 800,
     status: "available",
     is_active: true
   },
   {
-    id: "b2020000-0002-4000-8000-000000000202",
+    id: "09a47da6-3531-4a41-b883-8a38ecb9eb8a",
     room_number: "202",
     floor: 2,
     room_type_id: "deluxe-room",
-    price: 2499,
+    category: "Deluxe",
+    price: 1500,
+    price_per_night: 1500,
     status: "available",
     is_active: true
   },
   {
-    id: "b2030000-0002-4000-8000-000000000203",
+    id: "878170c2-ceea-4c4f-9e8c-8519fc57f6b8",
     room_number: "203",
     floor: 2,
     room_type_id: "deluxe-room",
-    price: 2499,
+    category: "Deluxe",
+    price: 1500,
+    price_per_night: 1500,
     status: "available",
     is_active: true
   },
 
   // FLOOR 3
   {
-    id: "c3010000-0003-4000-8000-000000000301",
+    id: "4cb831d8-fe53-48ee-9dd6-a05a415ff63a",
     room_number: "301",
     floor: 3,
-    room_type_id: "super-deluxe-room",
-    price: 3499,
+    room_type_id: "standard-room",
+    category: "Standard",
+    price: 800,
+    price_per_night: 800,
     status: "available",
     is_active: true
   },
   {
-    id: "c3020000-0003-4000-8000-000000000302",
+    id: "68e82ef6-52bb-4279-9941-866ce005ec31",
     room_number: "302",
     floor: 3,
-    room_type_id: "super-deluxe-room",
-    price: 3499,
+    room_type_id: "deluxe-room",
+    category: "Deluxe",
+    price: 1500,
+    price_per_night: 1500,
     status: "available",
     is_active: true
   },
   {
-    id: "c3030000-0003-4000-8000-000000000303",
+    id: "f830e2f5-7c6d-4ee8-b572-88229b47e231",
     room_number: "303",
     floor: 3,
     room_type_id: "super-deluxe-room",
-    price: 3499,
+    category: "Super Deluxe",
+    price: 2000,
+    price_per_night: 2000,
     status: "available",
     is_active: true
   }
@@ -158,9 +176,9 @@ export const ROOM_TYPES = [
     type: "Standard Room",
     tagline: "Comfortable accommodation with modern amenities",
     floorInfo: "Floor 1 (3 Rooms: 101, 102, 103)",
-    price: 1899,
-    pricePerNight: 1899,
-    originalPrice: 2299,
+    price: 500,
+    pricePerNight: 500,
+    originalPrice: 700,
     capacity: "2 Guests",
     maxAdults: 2,
     maxChildren: 1,
@@ -202,9 +220,9 @@ export const ROOM_TYPES = [
     type: "Deluxe Room",
     tagline: "Spacious comfort with premium furnishings",
     floorInfo: "Floor 2 (3 Rooms: 201, 202, 203)",
-    price: 2499,
-    pricePerNight: 2499,
-    originalPrice: 2899,
+    price: 1500,
+    pricePerNight: 1500,
+    originalPrice: 1800,
     capacity: "2 Adults + 1 Child",
     maxAdults: 2,
     maxChildren: 1,
@@ -247,9 +265,9 @@ export const ROOM_TYPES = [
     type: "Super Deluxe Room",
     tagline: "Elevated luxury with sitting lounge and panoramic views",
     floorInfo: "Floor 3 (3 Rooms: 301, 302, 303)",
-    price: 3499,
-    pricePerNight: 3499,
-    originalPrice: 3999,
+    price: 2000,
+    pricePerNight: 2000,
+    originalPrice: 2400,
     capacity: "3 Adults or 2 Adults + 2 Children",
     maxAdults: 3,
     maxChildren: 2,

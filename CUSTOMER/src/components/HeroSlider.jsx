@@ -78,7 +78,7 @@ export default function HeroSlider({ onOpenBooking }) {
       <div className="hero-container">
         {/* ====== HERO CONTENT (OVERLAY ON TOP OF BACKGROUND) ====== */}
         <div className="hero-content">
-          <span className="hero-eyebrow">AMONTRON LODGE &amp; RESTAURANT</span>
+          <span className="hero-eyebrow">AMONTRON HOTEL &amp; RESTAURANT</span>
 
           {/* Reserved height container with fixed font-size & line-height to prevent jumping */}
           <div className="hero-headline-container">

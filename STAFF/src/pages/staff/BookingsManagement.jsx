@@ -5,8 +5,10 @@ import {
   XCircle, AlertCircle, RefreshCw, ChevronLeft, ChevronRight, 
   List, CalendarDays, Filter
 } from 'lucide-react';
+import { useStore } from '../../context/StoreContext';
 
 export default function BookingsManagement() {
+  const { hotelConfig } = useStore();
   const [bookings, setBookings] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -430,6 +432,32 @@ export default function BookingsManagement() {
         </div>
       </div>
 
+      {/* Hotel Policy Check-in / Check-out Times Info Bar */}
+      <div style={{
+        background: '#f8fafc',
+        border: '1px solid #e2e8f0',
+        borderRadius: '8px',
+        padding: '0.65rem 1rem',
+        marginBottom: '1rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '0.5rem',
+        fontSize: '0.82rem',
+        color: '#334155'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Clock size={15} style={{ color: 'var(--primary-color)' }} />
+          <span>
+            <strong>Standard Hotel Policy:</strong> Check-in from <strong>{hotelConfig?.checkInTime || '12:00 PM'}</strong> • Check-out by <strong>{hotelConfig?.checkOutTime || '11:00 AM'}</strong>
+          </span>
+        </div>
+        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+          * Actual guest arrival/departure timestamps are logged upon manual front desk action
+        </span>
+      </div>
+
       {actionMessage.text && (
         <div style={{ 
           padding: '0.85rem', 
@@ -764,9 +792,15 @@ export default function BookingsManagement() {
             <h2 style={{ fontSize: '1.15rem', fontWeight: 'bold', marginBottom: '0.35rem' }}>
               Manage Booking {selectedBooking.booking_number}
             </h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.25rem' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>
               Customer: {selectedBooking.customers?.full_name || selectedBooking.guest_name} ({selectedBooking.check_in} to {selectedBooking.check_out})
             </p>
+            <div style={{ background: '#f1f5f9', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.78rem', color: '#475569', marginBottom: '1.1rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Clock size={13} style={{ color: 'var(--primary-color)', flexShrink: 0 }} />
+              <span>
+                Standard Policy: Check-in from <strong>{hotelConfig?.checkInTime || '12:00 PM'}</strong> • Check-out by <strong>{hotelConfig?.checkOutTime || '11:00 AM'}</strong>
+              </span>
+            </div>
 
             {/* Room Assignment */}
             <div className="input-group" style={{ marginBottom: '1.25rem' }}>

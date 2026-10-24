@@ -13,12 +13,17 @@ import {
   Calendar,
   ShieldCheck,
   Coffee,
-  Check
+  Check,
+  MessageCircle,
+  Clock
 } from 'lucide-react';
 import { getRoomById, getAllRoomTypes } from '../lib/roomService';
+import { contactRoutingService } from '../services/contactRoutingService';
+import { useHotelSettings } from '../context/HotelSettingsContext';
 import './Pages.css';
 
 export default function RoomDetailPage({ onOpenBooking }) {
+  const { hotelSettings } = useHotelSettings();
   const { id } = useParams();
   const navigate = useNavigate();
   const [room, setRoom] = useState(null);
@@ -159,6 +164,14 @@ export default function RoomDetailPage({ onOpenBooking }) {
                 <span style={{color: 'var(--text-secondary)'}}>Area</span>
                 <span style={{color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 500}}><Maximize2 size={16} className="text-gold" /> {room.size || `${room.sqft} sq. ft.`}</span>
               </div>
+              <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', paddingTop: '8px', borderTop: '1px dashed var(--border-subtle)'}}>
+                <span style={{color: 'var(--text-secondary)'}}>Standard Check-in</span>
+                <span style={{color: 'var(--text-primary)', fontWeight: 600}}>{hotelSettings.timings?.checkIn || hotelSettings.check_in_time || '12:00 PM'}</span>
+              </div>
+              <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem'}}>
+                <span style={{color: 'var(--text-secondary)'}}>Standard Check-out</span>
+                <span style={{color: 'var(--text-primary)', fontWeight: 600}}>{hotelSettings.timings?.checkOut || hotelSettings.check_out_time || '11:00 AM'}</span>
+              </div>
             </div>
 
             <button
@@ -168,6 +181,27 @@ export default function RoomDetailPage({ onOpenBooking }) {
             >
               <Calendar size={18} style={{marginRight: '8px'}} />
               <span>BOOK THIS ROOM</span>
+            </button>
+
+            <button
+              type="button"
+              className="btn-outline-gold w-100"
+              style={{display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px', fontSize: '0.95rem', cursor: 'pointer', background: 'transparent', marginTop: '12px'}}
+              onClick={async () => {
+                const res = await contactRoutingService.getBookingWhatsAppAction({
+                  roomName: room.name,
+                  roomNumber: room.room_number,
+                  totalAmount: room.pricePerNight || room.price
+                });
+                if (res.configured && res.url) {
+                  window.open(res.url, '_blank', 'noopener,noreferrer');
+                } else {
+                  alert(res.errorMessage || 'Room Booking WhatsApp recipient is not configured in Admin Settings. Please call +91 94334 24718.');
+                }
+              }}
+            >
+              <MessageCircle size={18} style={{marginRight: '8px'}} />
+              <span>Enquire on WhatsApp</span>
             </button>
 
             <div style={{marginTop: '24px', paddingTop: '24px', borderTop: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: '12px'}}>

@@ -10,41 +10,68 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+    let initialized = false;
+
+    // Safety timeout to prevent spinner from getting stuck on network/offline stalls
+    const timeoutTimer = setTimeout(() => {
+      if (isMounted) setLoading(false);
+    }, 5000);
+
     const initAuth = async () => {
       try {
         const sessionData = await authService.getCurrentUser();
-        if (sessionData) {
-          setUser(sessionData.user);
-          setProfile(sessionData.profile);
+        if (isMounted) {
+          if (sessionData) {
+            setUser(sessionData.user);
+            setProfile(sessionData.profile);
+          }
+          initialized = true;
         }
       } catch (error) {
         console.error("Auth init error:", error);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
     initAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!isMounted) return;
+
+      if (event === 'INITIAL_SESSION' && initialized) {
+        return; // Avoid duplicate profile query
+      }
+
       if (session) {
         setUser(session.user);
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .maybeSingle();
-        
-        if (error) console.error("Error fetching profile on state change:", error);
-        setProfile(data);
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .maybeSingle();
+          
+          if (error) console.error("Error fetching profile on state change:", error);
+          if (isMounted) setProfile(data);
+        } catch (err) {
+          console.error("Profile fetch error:", err);
+        }
       } else {
-        setUser(null);
-        setProfile(null);
+        if (isMounted) {
+          setUser(null);
+          setProfile(null);
+        }
       }
-      setLoading(false);
+      if (isMounted) setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      clearTimeout(timeoutTimer);
+      subscription.unsubscribe();
+    };
   }, []);
 
   const login = async (email, password) => {

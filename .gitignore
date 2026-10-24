@@ -1,3 +1,21 @@
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+
+# Node dependencies
+node_modules/
+**/node_modules/
+
+# Production build outputs
+/ADMIN/dist/
+/CUSTOMER/dist/
+/STAFF/dist/
+
+# Logs & caches
+*.log
+.vite/
+**/.vite/
 
 # Generated Android build files
 **/.gradle/

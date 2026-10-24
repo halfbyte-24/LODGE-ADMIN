@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
+import { dataManagementService } from '../../services/dataManagementService';
 import { 
   TrendingUp, TrendingDown, DollarSign, Calendar, Users, 
-  BedDouble, Receipt, AlertCircle, RefreshCw 
+  BedDouble, Receipt, AlertCircle, RefreshCw, ShieldCheck, Filter
 } from 'lucide-react';
 
 export default function AdminDashboard() {
   const { profile } = useAuth();
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState('all'); // 'today', 'month', 'all'
+  const [includeTestData, setIncludeTestData] = useState(false);
+  const [excludedTestCount, setExcludedTestCount] = useState(0);
   const [stats, setStats] = useState({
     totalPaymentsReceived: 0,
     totalApprovedExpenses: 0,
@@ -40,11 +43,17 @@ export default function AdminDashboard() {
         supabase.from('rooms').select('*')
       ]);
 
-      const payments = paymentsRes.data || [];
-      const expenses = expensesRes.data || [];
-      const bills = billsRes.data || [];
-      const bookings = bookingsRes.data || [];
+      const rawPayments = paymentsRes.data || [];
+      const rawExpenses = expensesRes.data || [];
+      const rawBills = billsRes.data || [];
+      const rawBookings = bookingsRes.data || [];
       const rooms = roomsRes.data || [];
+
+      // Exclude flagged test entries
+      const payments = rawPayments.filter(p => !p.is_test_data);
+      const expenses = rawExpenses.filter(e => !e.is_test_data);
+      const bills = rawBills.filter(b => !b.is_test_data);
+      const bookings = rawBookings.filter(b => !b.is_test_data);
 
       const todayStr = new Date().toISOString().split('T')[0];
       const currentMonthStr = todayStr.slice(0, 7); // 'YYYY-MM'
@@ -116,9 +125,12 @@ export default function AdminDashboard() {
           <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>Profit &amp; Loss Dashboard</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0 }}>Financial overview and operational health for Amontron Hotel and Restaurant.</p>
         </div>
-        <button className="btn btn-outline" onClick={loadFinancialData} disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minHeight: '40px' }}>
-          <RefreshCw size={16} /> Refresh
-        </button>
+        
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <button className="btn btn-outline" onClick={loadFinancialData} disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minHeight: '40px' }}>
+            <RefreshCw size={16} className={loading ? 'animate-spin' : ''} /> Refresh
+          </button>
+        </div>
       </div>
 
       {loading ? (

@@ -19,7 +19,7 @@ export default function InvoiceView() {
         setLoading(true);
         const [billData, hotelRes] = await Promise.all([
           billingService.getBillDetails(billId),
-          supabase.from('hotel_settings').select('*').limit(1).maybeSingle()
+          supabase.from('hotel_settings').select('*').order('updated_at', { ascending: false }).limit(1).maybeSingle()
         ]);
         setBill(billData);
         if (hotelRes?.data) {
@@ -96,7 +96,7 @@ export default function InvoiceView() {
   const businessName = 'Amontron Hotel and Restaurant';
   const businessAddress = hotelSettings?.address 
     ? `${hotelSettings.address}${hotelSettings.city ? ', ' + hotelSettings.city : ''}${hotelSettings.pin_code ? ' - ' + hotelSettings.pin_code : ''}`
-    : '123 Highway Road, Cityville';
+    : 'WM55+6MH, Dasghara, West Bengal 722161';
   const businessPhone = hotelSettings?.phone || '+91 94334 24718';
   const businessEmail = hotelSettings?.email || 'amontronhotelandrestaurant@gmail.com';
 
@@ -170,12 +170,12 @@ export default function InvoiceView() {
           <p className="receipt-info-text">{businessEmail}</p>
         </div>
         
-        <div className="receipt-divider">================================</div>
+        <div className="receipt-divider">--------------------------------</div>
         
         {/* INVOICE METADATA */}
         <div className="receipt-meta">
           <div className="receipt-meta-row">
-            <span>Bill / Inv No:</span>
+            <span>Invoice No:</span>
             <strong>{bill.invoice_number}</strong>
           </div>
           <div className="receipt-meta-row">
@@ -194,7 +194,7 @@ export default function InvoiceView() {
         <div className="receipt-guest">
           <div className="receipt-meta-row">
             <span>Customer:</span>
-            <strong>{guest?.full_name || 'Guest'}</strong>
+            <strong>{guest?.full_name || 'Walk-in Guest'}</strong>
           </div>
           {guest?.phone && (
             <div className="receipt-meta-row">
@@ -203,7 +203,7 @@ export default function InvoiceView() {
             </div>
           )}
           <div className="receipt-meta-row">
-            <span>Location:</span>
+            <span>Reference:</span>
             <strong>
               {booking?.rooms?.room_number 
                 ? `Room ${booking.rooms.room_number}` 
@@ -218,7 +218,7 @@ export default function InvoiceView() {
           )}
         </div>
 
-        <div className="receipt-divider">================================</div>
+        <div className="receipt-divider">--------------------------------</div>
         
         {/* ITEMIZED TABLE / CHARGES */}
         {paperWidth === '58mm' ? (
@@ -323,11 +323,9 @@ export default function InvoiceView() {
             : `*** STATUS: PAYMENT DUE (₹${balanceDue.toFixed(2)}) ***`}
         </div>
 
-        {/* FOOTER */}
+        {/* SHORT FOOTER — CLEAN WITHOUT REPEATED ADDRESS/PHONE */}
         <div className="receipt-footer">
-          <p className="footer-title">*** THANK YOU! VISIT AGAIN ***</p>
-          <p>Location: Amontron Hotel and Restaurant</p>
-          <p>For inquiries: {businessPhone}</p>
+          <p className="footer-title">*** Thank you for visiting! ***</p>
         </div>
 
         <div className="receipt-cut-line">
