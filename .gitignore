@@ -2,6 +2,7 @@
 .env
 .env.*
 !.env.example
+**/local.properties
 
 # Node dependencies
 node_modules/
@@ -17,7 +18,12 @@ node_modules/
 .vite/
 **/.vite/
 
-# Generated Android build files
+# Generated Android build files & IDE
 **/.gradle/
 **/build/
+**/.idea/
 **/capacitor-cordova-android-plugins/
+**/android-backup/
+**/android-broken-backup/
+*.apk
+*.aab
